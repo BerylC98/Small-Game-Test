@@ -1,0 +1,67 @@
+body{
+    margin:0;
+    background:#111;
+    font-family:monospace;
+}
+
+
+#game{
+
+width:900px;
+height:500px;
+
+margin:40px auto;
+
+background:
+linear-gradient(#55aaff,#333);
+
+position:relative;
+
+overflow:hidden;
+
+border:5px solid white;
+
+}
+
+
+.floor{
+
+position:absolute;
+
+bottom:0;
+
+height:80px;
+
+width:100%;
+
+background:#555;
+
+}
+
+
+
+.fighter{
+
+position:absolute;
+
+width:60px;
+
+height:100px;
+
+bottom:80px;
+
+}
+
+
+.player{
+
+background:#0088ff;
+
+}
+
+
+.cpu{
+
+background:#ff2222;
+
+}
