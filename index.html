@@ -1,122 +1,21 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-
-<title>Pixel Fighter</title>
-
-<style>
-
-body{
-    margin:0;
-    background:#111;
-    color:white;
-    text-align:center;
-    font-family:monospace;
-}
-
-
-#game{
-
-width:900px;
-height:500px;
-
-margin:30px auto;
-
-background:linear-gradient(#55aaff,#222);
-
-position:relative;
-
-overflow:hidden;
-
-border:5px solid white;
-
-}
-
-
-
-.floor{
-
-position:absolute;
-
-bottom:0;
-
-height:80px;
-
-width:100%;
-
-background:#555;
-
-}
-
-
-
-.player{
-
-position:absolute;
-
-bottom:80px;
-
-width:60px;
-
-height:100px;
-
-}
-
-
-
-.blue{
-
-left:200px;
-
-background:#0088ff;
-
-}
-
-
-
-.red{
-
-left:650px;
-
-background:#ff2222;
-
-}
-
-
-
-</style>
-
-</head>
-
-
 <body>
 
-
-<h1>PIXEL STREET FIGHTER</h1>
+<h1>
+PIXEL STREET FIGHTER
+</h1>
 
 
 <div id="game">
 
+<div class="fighter player"></div>
 
-<div class="player blue"></div>
-
-
-<div class="player red"></div>
-
+<div class="fighter cpu"></div>
 
 <div class="floor"></div>
-
 
 </div>
 
 
-
-<h2>
-A/D Move | J Punch
-</h2>
-
+<script src="game.js"></script>
 
 </body>
-
-</html>
