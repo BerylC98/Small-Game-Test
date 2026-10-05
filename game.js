@@ -1,6 +1,6 @@
 // ========================================
 // PIXEL STREET FIGHTER
-// Simple Boxing Game
+// Player VS CPU
 // ========================================
 
 
@@ -11,7 +11,6 @@
 const player = {
 
     x:180,
-
     y:0,
 
     hp:100,
@@ -41,12 +40,13 @@ const player = {
 const cpu = {
 
     x:700,
-
     y:0,
 
     hp:100,
 
     speed:2.2,
+
+    jumpSpeed:12,
 
     velocityY:0,
 
@@ -56,7 +56,9 @@ const cpu = {
 
     cooldown:false,
 
-    blocking:false
+    blocking:false,
+
+    jumpCooldown:false
 
 };
 
@@ -81,6 +83,12 @@ const cpuBar =
 const message =
     document.getElementById("message");
 
+const resultText =
+    document.getElementById("resultText");
+
+const restartButton =
+    document.getElementById("restartButton");
+
 
 
 // ========================================
@@ -99,7 +107,10 @@ document.addEventListener(
 
 
         // J = 拳
-        if(e.key.toLowerCase() === "j"){
+
+        if(
+            e.key.toLowerCase() === "j"
+        ){
 
             playerAttack("punch");
 
@@ -107,7 +118,10 @@ document.addEventListener(
 
 
         // K = 踢
-        if(e.key.toLowerCase() === "k"){
+
+        if(
+            e.key.toLowerCase() === "k"
+        ){
 
             playerAttack("kick");
 
@@ -115,7 +129,10 @@ document.addEventListener(
 
 
         // W = 跳
-        if(e.key.toLowerCase() === "w"){
+
+        if(
+            e.key.toLowerCase() === "w"
+        ){
 
             jump(player);
 
@@ -143,7 +160,10 @@ document.addEventListener(
 
 function jump(fighter){
 
-    if(fighter.y === 0){
+    if(
+        fighter.y === 0 &&
+        !fighter.attacking
+    ){
 
         fighter.velocityY =
             fighter.jumpSpeed;
@@ -160,9 +180,11 @@ function jump(fighter){
 
 function gravity(fighter){
 
-    fighter.y += fighter.velocityY;
+    fighter.y +=
+        fighter.velocityY;
 
-    fighter.velocityY -= 0.7;
+    fighter.velocityY -=
+        0.7;
 
 
     if(fighter.y <= 0){
@@ -185,30 +207,33 @@ function playerMovement(){
 
     if(keys["a"]){
 
-        player.x -= player.speed;
+        player.x -=
+            player.speed;
 
     }
 
 
     if(keys["d"]){
 
-        player.x += player.speed;
+        player.x +=
+            player.speed;
 
     }
 
 
-    // 防御
-
     player.blocking =
-        keys["s"] && !player.attacking;
+        keys["s"] &&
+        !player.attacking;
 
 
-    // 限制范围
 
     player.x =
         Math.max(
             0,
-            Math.min(840, player.x)
+            Math.min(
+                840,
+                player.x
+            )
         );
 
 }
@@ -239,16 +264,16 @@ function playerAttack(type){
 
 
 
-    // 攻击距离
+    let distance =
+        Math.abs(
+            player.x - cpu.x
+        );
 
-    const distance =
-        Math.abs(player.x - cpu.x);
 
+    let damage;
 
+    let range;
 
-    let damage = 0;
-
-    let range = 0;
 
 
     if(type === "punch"){
@@ -278,8 +303,6 @@ function playerAttack(type){
 
 
 
-    // 命中
-
     if(distance <= range){
 
         damageCPU(damage);
@@ -287,8 +310,6 @@ function playerAttack(type){
     }
 
 
-
-    // 攻击结束
 
     setTimeout(function(){
 
@@ -305,8 +326,6 @@ function playerAttack(type){
     },180);
 
 
-
-    // 冷却
 
     setTimeout(function(){
 
@@ -327,65 +346,176 @@ function cpuAI(){
     const distance =
         player.x - cpu.x;
 
+
     const absDistance =
         Math.abs(distance);
 
 
 
-    // CPU 靠近玩家
+    // ==================================
+    // CPU 面向玩家并靠近
+    // ==================================
 
-    if(absDistance > 100){
+    if(absDistance > 115){
 
         if(distance > 0){
 
-            cpu.x += cpu.speed;
+            cpu.x +=
+                cpu.speed;
 
         }
         else{
 
-            cpu.x -= cpu.speed;
+            cpu.x -=
+                cpu.speed;
 
         }
 
     }
 
 
-    // 靠近后攻击
 
-    else{
+    // ==================================
+    // CPU 跳跃逻辑
+    // ==================================
+
+    // 如果玩家在空中
+    // CPU 有概率跳起来
+
+    if(
+        player.y > 40 &&
+        cpu.y === 0 &&
+        !cpu.jumpCooldown
+    ){
+
+        if(Math.random() < 0.04){
+
+            cpuJump();
+
+        }
+
+    }
+
+
+
+    // ==================================
+    // 距离太远时偶尔跳跃追击
+    // ==================================
+
+    if(
+        absDistance > 250 &&
+        cpu.y === 0 &&
+        !cpu.jumpCooldown
+    ){
+
+        if(Math.random() < 0.01){
+
+            cpuJump();
+
+        }
+
+    }
+
+
+
+    // ==================================
+    // 攻击
+    // ==================================
+
+    if(
+        absDistance <= 115 &&
+        !cpu.attacking &&
+        !cpu.cooldown
+    ){
 
         if(
-            !cpu.attacking &&
-            !cpu.cooldown
+            Math.random() < 0.035
         ){
 
-            const random =
-                Math.random();
-
-
-            if(random < 0.025){
-
-                cpuAttack();
-
-            }
+            cpuAttack();
 
         }
 
     }
 
 
-    // 偶尔防御
 
-    cpu.blocking =
-        Math.random() < 0.01 &&
-        !cpu.attacking;
+    // ==================================
+    // CPU 防御
+    // ==================================
 
+    cpu.blocking = false;
+
+
+    // 玩家正在攻击的时候
+    // CPU 偶尔防御
+
+    if(
+        player.attacking &&
+        absDistance < 130
+    ){
+
+        if(
+            Math.random() < 0.25
+        ){
+
+            cpu.blocking = true;
+
+        }
+
+    }
+
+
+
+    // ==================================
+    // 限制边界
+    // ==================================
 
     cpu.x =
         Math.max(
             0,
-            Math.min(840,cpu.x)
+            Math.min(
+                840,
+                cpu.x
+            )
         );
+
+}
+
+
+
+// ========================================
+// CPU 跳跃
+// ========================================
+
+function cpuJump(){
+
+    if(
+        cpu.y !== 0 ||
+        cpu.jumpCooldown
+    ){
+
+        return;
+
+    }
+
+
+    cpu.velocityY =
+        cpu.jumpSpeed;
+
+
+    cpu.jumpCooldown =
+        true;
+
+
+    // 跳跃冷却
+
+    setTimeout(function(){
+
+        cpu.jumpCooldown =
+            false;
+
+    },1000);
 
 }
 
@@ -402,33 +532,28 @@ function cpuAttack(){
     cpu.cooldown = true;
 
 
-
     const distance =
-        Math.abs(cpu.x - player.x);
+        Math.abs(
+            cpu.x - player.x
+        );
 
 
-    const kick =
-        Math.random() < 0.4;
+    // CPU 根据距离选择攻击
+
+    let kick =
+        distance > 75;
 
 
-    const damage =
-        kick ? 10 : 7;
+    let damage;
 
-
-    const range =
-        kick ? 110 : 90;
-
-
-
-    if(distance <= range){
-
-        damagePlayer(damage);
-
-    }
-
+    let range;
 
 
     if(kick){
+
+        damage = 10;
+
+        range = 110;
 
         cpuEl.classList.add(
             "kicking"
@@ -437,9 +562,21 @@ function cpuAttack(){
     }
     else{
 
+        damage = 7;
+
+        range = 90;
+
         cpuEl.classList.add(
             "punching"
         );
+
+    }
+
+
+
+    if(distance <= range){
+
+        damagePlayer(damage);
 
     }
 
@@ -465,14 +602,14 @@ function cpuAttack(){
 
         cpu.cooldown = false;
 
-    },700);
+    },650);
 
 }
 
 
 
 // ========================================
-// 玩家受到伤害
+// 玩家受伤
 // ========================================
 
 function damagePlayer(amount){
@@ -484,7 +621,8 @@ function damagePlayer(amount){
     }
 
 
-    player.hp -= amount;
+    player.hp -=
+        amount;
 
 
     player.hp =
@@ -512,7 +650,7 @@ function damagePlayer(amount){
 
 
 // ========================================
-// CPU 受到伤害
+// CPU 受伤
 // ========================================
 
 function damageCPU(amount){
@@ -524,7 +662,8 @@ function damageCPU(amount){
     }
 
 
-    cpu.hp -= amount;
+    cpu.hp -=
+        amount;
 
 
     cpu.hp =
@@ -552,7 +691,7 @@ function damageCPU(amount){
 
 
 // ========================================
-// 更新血条
+// 血条
 // ========================================
 
 function updateHealth(){
@@ -572,28 +711,51 @@ function updateHealth(){
 // 游戏结束
 // ========================================
 
+let gameOver = false;
+
+
+
 function checkWinner(){
 
-    if(player.hp <= 0){
-
-        message.innerText =
-            "CPU WINS!";
-
-        message.style.display =
-            "block";
+    if(gameOver){
 
         return true;
 
     }
 
 
-    if(cpu.hp <= 0){
 
-        message.innerText =
-            "PLAYER WINS!";
+    if(player.hp <= 0){
+
+        gameOver = true;
+
+
+        resultText.innerText =
+            "CPU WINS!";
+
 
         message.style.display =
             "block";
+
+
+        return true;
+
+    }
+
+
+
+    if(cpu.hp <= 0){
+
+        gameOver = true;
+
+
+        resultText.innerText =
+            "PLAYER WINS!";
+
+
+        message.style.display =
+            "block";
+
 
         return true;
 
@@ -628,6 +790,9 @@ function draw(){
         (80 + cpu.y) + "px";
 
 
+
+    // 玩家防御
+
     if(player.blocking){
 
         playerEl.classList.add(
@@ -643,6 +808,9 @@ function draw(){
 
     }
 
+
+
+    // CPU 防御
 
     if(cpu.blocking){
 
@@ -690,6 +858,21 @@ function gameLoop(){
     }
 
 }
+
+
+
+// ========================================
+// Restart
+// ========================================
+
+restartButton.addEventListener(
+    "click",
+    function(){
+
+        location.reload();
+
+    }
+);
 
 
 
