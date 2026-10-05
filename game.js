@@ -532,14 +532,19 @@ function checkWinner() {
 
     if (player.hp <= 0) {
 
-        endGame("CPU WINS!");
+        endGame(`Oops...
+You totally did that on purpose!
+
+Don’t worry,
+you’re still the best! ♡`);
 
         return true;
     }
 
     if (cpu.hp <= 0) {
 
-        endGame("PLAYER WINS!");
+        endGame(`Yeahhh! You are the winner!
+Happy birthday to you! ♡`);
 
         return true;
     }
