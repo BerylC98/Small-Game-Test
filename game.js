@@ -1,6 +1,6 @@
 // ========================================
-// PIXEL FIGHTER V2
-// Menu -> Character Select -> Fight
+// PIXEL FIGHTER V3
+// Best of 3 / First to 2 rounds wins
 // ========================================
 
 const screens = {
@@ -50,19 +50,28 @@ const menuButton =
     document.getElementById("menuButton");
 
 
+// ========================================
+// GAME STATE
+// ========================================
+
 let selectedColor = "blue";
+
 let gameRunning = false;
 let gameOver = false;
+let roundIntro = false;
 
-const keys = {};
-
+let playerRounds = 0;
+let cpuRounds = 0;
+let currentRound = 1;
 
 let player;
 let cpu;
 
+const keys = {};
+
 
 // ========================================
-// Screen switching
+// SCREEN SWITCHING
 // ========================================
 
 function showScreen(name) {
@@ -76,7 +85,7 @@ function showScreen(name) {
 
 
 // ========================================
-// Character select
+// CHARACTER SELECT
 // ========================================
 
 fighterChoices.forEach(choice => {
@@ -100,7 +109,7 @@ fighterChoices.forEach(choice => {
 
 
 // ========================================
-// Menu buttons
+// MENU BUTTONS
 // ========================================
 
 startButton.addEventListener("click", () => {
@@ -120,12 +129,18 @@ selectBackButton.addEventListener("click", () => {
 });
 
 confirmButton.addEventListener("click", () => {
-    startFight();
+
+    // Start a completely new match
+    playerRounds = 0;
+    cpuRounds = 0;
+    currentRound = 1;
+
+    startRound();
 });
 
 
 // ========================================
-// Keyboard
+// KEYBOARD
 // ========================================
 
 document.addEventListener("keydown", event => {
@@ -137,7 +152,8 @@ document.addEventListener("keydown", event => {
 
     if (
         !gameRunning ||
-        gameOver
+        gameOver ||
+        roundIntro
     ) {
         return;
     }
@@ -163,10 +179,10 @@ document.addEventListener("keyup", event => {
 
 
 // ========================================
-// Start fight
+// START A ROUND
 // ========================================
 
-function startFight() {
+function startRound() {
 
     player = {
         x: 180,
@@ -194,9 +210,18 @@ function startFight() {
     };
 
     gameOver = false;
-    gameRunning = true;
+    gameRunning = false;
+    roundIntro = true;
 
-    message.style.display = "none";
+    message.style.display = "block";
+
+    restartButton.style.display = "none";
+    characterButton.style.display = "none";
+    menuButton.style.display = "none";
+
+    resultText.innerHTML =
+        `ROUND ${currentRound}<br>
+         <span style="font-size: 22px;">FIGHT!</span>`;
 
     playerEl.className =
         "fighter player " + selectedColor;
@@ -209,12 +234,30 @@ function startFight() {
 
     showScreen("fight");
 
-    requestAnimationFrame(gameLoop);
+    // Short intro before the round begins
+    setTimeout(() => {
+
+        if (gameOver) {
+            return;
+        }
+
+        message.style.display = "none";
+
+        restartButton.style.display = "";
+        characterButton.style.display = "";
+        menuButton.style.display = "";
+
+        roundIntro = false;
+        gameRunning = true;
+
+        requestAnimationFrame(gameLoop);
+
+    }, 1300);
 }
 
 
 // ========================================
-// Jump
+// JUMP
 // ========================================
 
 function jump(fighter) {
@@ -230,7 +273,7 @@ function jump(fighter) {
 
 
 // ========================================
-// Gravity
+// GRAVITY
 // ========================================
 
 function gravity(fighter) {
@@ -248,7 +291,7 @@ function gravity(fighter) {
 
 
 // ========================================
-// Player movement
+// PLAYER MOVEMENT
 // ========================================
 
 function playerMovement() {
@@ -274,7 +317,7 @@ function playerMovement() {
 
 
 // ========================================
-// Player attack
+// PLAYER ATTACK
 // ========================================
 
 function playerAttack(type) {
@@ -344,6 +387,7 @@ function cpuAI() {
         Math.abs(distance);
 
 
+    // Move toward player
     if (absDistance > 115) {
 
         if (distance > 0) {
@@ -354,7 +398,7 @@ function cpuAI() {
     }
 
 
-    // CPU sometimes jumps
+    // CPU sometimes jumps when player is airborne
     if (
         player.y > 40 &&
         cpu.y === 0 &&
@@ -365,7 +409,7 @@ function cpuAI() {
     }
 
 
-    // CPU jumps when far away sometimes
+    // CPU sometimes jumps when far away
     if (
         absDistance > 250 &&
         cpu.y === 0 &&
@@ -403,7 +447,7 @@ function cpuAI() {
 
 
 // ========================================
-// CPU jump
+// CPU JUMP
 // ========================================
 
 function cpuJump() {
@@ -427,7 +471,7 @@ function cpuJump() {
 
 
 // ========================================
-// CPU attack
+// CPU ATTACK
 // ========================================
 
 function cpuAttack() {
@@ -473,7 +517,7 @@ function cpuAttack() {
 
 
 // ========================================
-// Damage
+// DAMAGE
 // ========================================
 
 function damagePlayer(amount) {
@@ -511,7 +555,7 @@ function damageCPU(amount) {
 
 
 // ========================================
-// Health
+// HEALTH
 // ========================================
 
 function updateHealth() {
@@ -525,26 +569,21 @@ function updateHealth() {
 
 
 // ========================================
-// Winner
+// ROUND WINNER
 // ========================================
 
 function checkWinner() {
 
     if (player.hp <= 0) {
 
-        endGame(`Oops...
-You totally did that on purpose!
-
-Don’t worry,
-you’re still the best! ♡`);
+        finishRound("CPU");
 
         return true;
     }
 
     if (cpu.hp <= 0) {
 
-        endGame(`Yeahhh! You are the winner!
-Happy birthday to you! ♡`);
+        finishRound("PLAYER");
 
         return true;
     }
@@ -553,19 +592,110 @@ Happy birthday to you! ♡`);
 }
 
 
-function endGame(text) {
+function finishRound(winner) {
 
-    gameOver = true;
     gameRunning = false;
+    roundIntro = true;
 
-    resultText.innerText = text;
+
+    // PLAYER WINS THIS ROUND
+    if (winner === "PLAYER") {
+
+        playerRounds++;
+
+        // PLAYER WINS THE WHOLE MATCH
+        if (playerRounds >= 2) {
+
+            endGame(
+                `Yeahhh! You are the winner!<br>
+                 Happy birthday to you! ♡`
+            );
+
+            return;
+        }
+
+    }
+
+
+    // CPU WINS THIS ROUND
+    else {
+
+        cpuRounds++;
+
+        // CPU WINS THE WHOLE MATCH
+        if (cpuRounds >= 2) {
+
+            endGame(
+                `Oops...<br>
+                 You totally did that on purpose!<br><br>
+                 Don't worry,<br>
+                 you're still the best! ♡`
+            );
+
+            return;
+        }
+    }
+
+
+    // MATCH IS NOT OVER YET
+    const roundWinner =
+        winner === "PLAYER"
+            ? "PLAYER WINS!"
+            : "CPU WINS!";
+
+    resultText.innerHTML =
+        `${roundWinner}<br>
+         <span style="font-size: 20px;">
+         ${playerRounds} - ${cpuRounds}
+         </span>`;
 
     message.style.display = "block";
+
+    restartButton.style.display = "none";
+    characterButton.style.display = "none";
+    menuButton.style.display = "none";
+
+
+    // Automatically start next round
+    setTimeout(() => {
+
+        if (
+            playerRounds >= 2 ||
+            cpuRounds >= 2
+        ) {
+            return;
+        }
+
+        currentRound++;
+
+        startRound();
+
+    }, 1200);
 }
 
 
 // ========================================
-// Draw
+// FINAL MATCH END
+// ========================================
+
+function endGame(text) {
+
+    gameOver = true;
+    gameRunning = false;
+    roundIntro = false;
+
+    resultText.innerHTML = text;
+
+    message.style.display = "block";
+
+    restartButton.style.display = "";
+    characterButton.style.display = "";
+    menuButton.style.display = "";
+}
+
+
+// ========================================
+// DRAW
 // ========================================
 
 function draw() {
@@ -596,7 +726,7 @@ function draw() {
 
 
 // ========================================
-// Game loop
+// GAME LOOP
 // ========================================
 
 function gameLoop() {
@@ -624,25 +754,43 @@ function gameLoop() {
 
 
 // ========================================
-// End-game buttons
+// END-GAME BUTTONS
 // ========================================
 
 restartButton.addEventListener("click", () => {
-    startFight();
+
+    // Restart entire match from Round 1
+    playerRounds = 0;
+    cpuRounds = 0;
+    currentRound = 1;
+
+    startRound();
 });
+
 
 characterButton.addEventListener("click", () => {
 
     gameRunning = false;
     gameOver = true;
+    roundIntro = false;
+
+    playerRounds = 0;
+    cpuRounds = 0;
+    currentRound = 1;
 
     showScreen("select");
 });
+
 
 menuButton.addEventListener("click", () => {
 
     gameRunning = false;
     gameOver = true;
+    roundIntro = false;
+
+    playerRounds = 0;
+    cpuRounds = 0;
+    currentRound = 1;
 
     showScreen("menu");
 });
