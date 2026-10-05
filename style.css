@@ -1,67 +1,404 @@
-body{
-    margin:0;
-    background:#111;
-    font-family:monospace;
+/* =================================
+   基础
+================================= */
+
+*{
+    box-sizing:border-box;
 }
 
+
+body{
+
+    margin:0;
+
+    background:#111;
+
+    color:white;
+
+    text-align:center;
+
+    font-family:monospace;
+
+}
+
+
+
+/* =================================
+   标题
+================================= */
+
+h1{
+
+    margin:20px 0 10px;
+
+    font-size:28px;
+
+    letter-spacing:4px;
+
+}
+
+
+
+/* =================================
+   血条 HUD
+================================= */
+
+.hud{
+
+    width:900px;
+
+    margin:0 auto 10px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:40px;
+
+}
+
+
+.health-container{
+
+    width:400px;
+
+}
+
+
+.name{
+
+    text-align:left;
+
+    font-size:18px;
+
+    margin-bottom:4px;
+
+}
+
+
+.health{
+
+    height:28px;
+
+    background:#222;
+
+    border:3px solid white;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+
+.health-bar{
+
+    height:100%;
+
+    width:100%;
+
+    transition:width .15s;
+
+}
+
+
+.player-health{
+
+    background:#22dd55;
+
+}
+
+
+.cpu-health{
+
+    background:#e83232;
+
+    float:right;
+
+}
+
+
+
+/* =================================
+   游戏场地
+================================= */
 
 #game{
 
-width:900px;
-height:500px;
+    width:900px;
 
-margin:40px auto;
+    height:500px;
 
-background:
-linear-gradient(#55aaff,#333);
+    margin:0 auto;
 
-position:relative;
+    position:relative;
 
-overflow:hidden;
+    overflow:hidden;
 
-border:5px solid white;
+    border:5px solid white;
+
+
+    background:
+
+        linear-gradient(
+            #4c9ed8 0%,
+            #9bd4e8 55%,
+            #555 55%,
+            #222 100%
+        );
 
 }
 
+
+
+/* =================================
+   地面
+================================= */
 
 .floor{
 
-position:absolute;
+    position:absolute;
 
-bottom:0;
+    bottom:0;
 
-height:80px;
+    left:0;
 
-width:100%;
+    width:100%;
 
-background:#555;
+    height:80px;
+
+    background:
+
+        repeating-linear-gradient(
+            45deg,
+            #444 0px,
+            #444 20px,
+            #333 20px,
+            #333 40px
+        );
+
+    border-top:4px solid #888;
 
 }
 
 
+
+/* =================================
+   角色
+================================= */
 
 .fighter{
 
-position:absolute;
+    position:absolute;
 
-width:60px;
+    width:60px;
 
-height:100px;
+    height:110px;
 
-bottom:80px;
+    bottom:80px;
+
+    transition:filter .05s;
 
 }
 
+
+
+/* 玩家 */
 
 .player{
 
-background:#0088ff;
+    left:180px;
 
 }
 
 
+
+/* CPU */
+
 .cpu{
 
-background:#ff2222;
+    left:700px;
+
+}
+
+
+
+/* =================================
+   头
+================================= */
+
+.head{
+
+    position:absolute;
+
+    width:42px;
+
+    height:36px;
+
+    left:9px;
+
+    top:0;
+
+    background:#f2bd91;
+
+    border:3px solid #111;
+
+}
+
+
+
+/* =================================
+   身体
+================================= */
+
+.body{
+
+    position:absolute;
+
+    width:50px;
+
+    height:55px;
+
+    left:5px;
+
+    top:34px;
+
+    border:3px solid #111;
+
+}
+
+
+.player .body{
+
+    background:#168cff;
+
+}
+
+
+.cpu .body{
+
+    background:#e02b2b;
+
+}
+
+
+
+/* =================================
+   腿
+================================= */
+
+.leg{
+
+    position:absolute;
+
+    width:18px;
+
+    height:35px;
+
+    bottom:0;
+
+    background:#222;
+
+}
+
+
+.left-leg{
+
+    left:8px;
+
+}
+
+
+.right-leg{
+
+    right:8px;
+
+}
+
+
+
+/* =================================
+   攻击时的视觉
+================================= */
+
+.punching{
+
+    transform:translateX(12px);
+
+}
+
+
+.kicking{
+
+    transform:translateX(16px);
+
+}
+
+
+
+/* =================================
+   受击闪白
+================================= */
+
+.hit{
+
+    filter:brightness(3);
+
+}
+
+
+
+/* =================================
+   防御
+================================= */
+
+.blocking{
+
+    filter:brightness(.55);
+
+}
+
+
+
+/* =================================
+   胜负
+================================= */
+
+.message{
+
+    position:absolute;
+
+    width:100%;
+
+    top:190px;
+
+    text-align:center;
+
+    font-size:48px;
+
+    font-weight:bold;
+
+    color:white;
+
+    text-shadow:
+        4px 4px #000;
+
+    display:none;
+
+}
+
+
+
+/* =================================
+   操作说明
+================================= */
+
+.controls{
+
+    margin-top:12px;
+
+    font-size:15px;
+
+    color:#ccc;
 
 }
