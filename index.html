@@ -21,11 +21,11 @@
     <section id="menuScreen" class="screen active">
 
         <div class="title">
-            BIRTHDAY BRAWL
+            YEYMAR FIGHTER
         </div>
 
         <div class="subtitle">
-            A Tiny Pixel Fighting Game
+            A Tiny Pixel Fighting Game For You
         </div>
 
         <div class="menu-buttons">
@@ -89,88 +89,79 @@
         </div>
 
 
-        <div class="fighters-select">
+       <div class="fighters-select">
+
+    <button class="fighter-choice selected"
+            data-character="Kiryu">
+
+        <img
+            class="profile-image"
+            src="Character/Kiryu/profile.png"
+            alt="桐生"
+        >
+
+        <span>桐生</span>
+
+    </button>
 
 
-            <!-- BLUE -->
+    <button class="fighter-choice"
+            data-character="Zhaoyun">
 
-            <button
-                class="fighter-choice"
-                data-color="blue"
-            >
+        <img
+            class="profile-image"
+            src="Character/Zhaoyun/profile.png"
+            alt="赵云"
+        >
 
-                <span class="choice-character blue-character"></span>
+        <span>赵云</span>
 
-                <span>
-                    BLUE
-                </span>
-
-            </button>
+    </button>
 
 
-            <!-- 桐生 -->
+    <button class="fighter-choice"
+            data-character="Kugga">
 
-            <button
-                class="fighter-choice selected"
-                data-color="red"
-            >
+        <img
+            class="profile-image"
+            src="Character/Kugga/profile.png"
+            alt="空我"
+        >
 
-                <img
-                    class="profile-image"
-                    src="Character/Kiryu/profile.png"
-                    alt="桐生"
-                >
+        <span>空我</span>
 
-                <span>
-                    桐生
-                </span>
-
-            </button>
+    </button>
 
 
-            <!-- GREEN -->
+    <button class="fighter-choice"
+            data-character="Cat">
 
-            <button
-                class="fighter-choice"
-                data-color="green"
-            >
+        <img
+            class="profile-image"
+            src="Character/Cat/profile.png"
+            alt="小猫"
+        >
 
-                <span class="choice-character green-character"></span>
+        <span>小猫</span>
 
-                <span>
-                    GREEN
-                </span>
+    </button>
 
-            </button>
+</div>
 
+<div class="selected-text">
+    Selected Fighter:
+    <strong id="selectedName">桐生</strong>
+</div>
 
-            <!-- YELLOW -->
+<button id="confirmButton">
+    FIGHT!
+</button>
 
-            <button
-                class="fighter-choice"
-                data-color="yellow"
-            >
-
-                <span class="choice-character yellow-character"></span>
-
-                <span>
-                    YELLOW
-                </span>
-
-            </button>
-
-
-        </div>
-
-
-        <div class="selected-text">
-
-            SELECTED:
-            <span id="selectedName">
-                小红
-            </span>
-
-        </div>
+<button
+    id="selectBackButton"
+    class="secondary-button">
+    BACK
+</button>
 
 
         <button id="confirmButton">
@@ -205,7 +196,7 @@
             <div class="health-container">
 
                 <div class="name">
-                    小红
+                    桐生
                 </div>
 
                 <div class="health">
