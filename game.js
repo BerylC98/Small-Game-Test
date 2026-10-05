@@ -1,75 +1,180 @@
 // ========================================
 // PIXEL STREET FIGHTER
-// Player VS CPU
+// Simple Boxing Game
 // ========================================
 
 
-// ---------- 玩家 ----------
+// ========================================
+// 玩家
+// ========================================
 
-let player = {
-    x: 180,
-    y: 0,
+const player = {
 
-    hp: 100,
+    x:180,
 
-    speed: 5,
+    y:0,
 
-    attacking: false,
-    guarding: false,
+    hp:100,
 
-    attackCooldown: false,
+    speed:5,
 
-    facing: 1
+    jumpSpeed:13,
+
+    velocityY:0,
+
+    attacking:false,
+
+    attackType:null,
+
+    cooldown:false,
+
+    blocking:false
+
 };
 
 
-// ---------- CPU ----------
 
-let cpu = {
-    x: 700,
-    y: 0,
+// ========================================
+// CPU
+// ========================================
 
-    hp: 100,
+const cpu = {
 
-    speed: 2.2,
+    x:700,
 
-    attacking: false,
-    guarding: false,
+    y:0,
 
-    attackCooldown: false,
+    hp:100,
 
-    facing: -1
+    speed:2.2,
+
+    velocityY:0,
+
+    attacking:false,
+
+    attackType:null,
+
+    cooldown:false,
+
+    blocking:false
+
 };
 
 
-// ---------- 获取 HTML 元素 ----------
 
-const playerBox =
-    document.querySelector(".player");
+// ========================================
+// HTML
+// ========================================
 
-const cpuBox =
-    document.querySelector(".cpu");
+const playerEl =
+    document.getElementById("player");
 
-const game =
-    document.querySelector("#game");
+const cpuEl =
+    document.getElementById("cpu");
 
+const playerBar =
+    document.getElementById("playerBar");
 
-// ---------- 键盘 ----------
+const cpuBar =
+    document.getElementById("cpuBar");
 
-let keys = {};
-
-document.addEventListener("keydown", function(e){
-
-    keys[e.key.toLowerCase()] = true;
-
-});
+const message =
+    document.getElementById("message");
 
 
-document.addEventListener("keyup", function(e){
 
-    keys[e.key.toLowerCase()] = false;
+// ========================================
+// 键盘
+// ========================================
 
-});
+const keys = {};
+
+
+
+document.addEventListener(
+    "keydown",
+    function(e){
+
+        keys[e.key.toLowerCase()] = true;
+
+
+        // J = 拳
+        if(e.key.toLowerCase() === "j"){
+
+            playerAttack("punch");
+
+        }
+
+
+        // K = 踢
+        if(e.key.toLowerCase() === "k"){
+
+            playerAttack("kick");
+
+        }
+
+
+        // W = 跳
+        if(e.key.toLowerCase() === "w"){
+
+            jump(player);
+
+        }
+
+    }
+);
+
+
+
+document.addEventListener(
+    "keyup",
+    function(e){
+
+        keys[e.key.toLowerCase()] = false;
+
+    }
+);
+
+
+
+// ========================================
+// 跳跃
+// ========================================
+
+function jump(fighter){
+
+    if(fighter.y === 0){
+
+        fighter.velocityY =
+            fighter.jumpSpeed;
+
+    }
+
+}
+
+
+
+// ========================================
+// 重力
+// ========================================
+
+function gravity(fighter){
+
+    fighter.y += fighter.velocityY;
+
+    fighter.velocityY -= 0.7;
+
+
+    if(fighter.y <= 0){
+
+        fighter.y = 0;
+
+        fighter.velocityY = 0;
+
+    }
+
+}
+
 
 
 // ========================================
@@ -78,90 +183,109 @@ document.addEventListener("keyup", function(e){
 
 function playerMovement(){
 
-    // 左
     if(keys["a"]){
 
         player.x -= player.speed;
 
-        player.facing = -1;
-
     }
 
 
-    // 右
     if(keys["d"]){
 
         player.x += player.speed;
-
-        player.facing = 1;
 
     }
 
 
     // 防御
-    player.guarding = keys["s"];
+
+    player.blocking =
+        keys["s"] && !player.attacking;
 
 
-    // 限制玩家范围
+    // 限制范围
 
-    if(player.x < 0){
-        player.x = 0;
-    }
-
-    if(player.x > 840){
-        player.x = 840;
-    }
+    player.x =
+        Math.max(
+            0,
+            Math.min(840, player.x)
+        );
 
 }
+
 
 
 // ========================================
 // 玩家攻击
 // ========================================
 
-function playerAttack(){
+function playerAttack(type){
 
-    if(player.attackCooldown){
+    if(
+        player.cooldown ||
+        player.attacking
+    ){
+
         return;
+
     }
 
 
     player.attacking = true;
 
-    player.attackCooldown = true;
+    player.attackType = type;
 
+    player.cooldown = true;
 
-    console.log("PLAYER ATTACK!");
-
-
-
-    // 判断距离
-
-    let distance =
-        Math.abs(player.x - cpu.x);
 
 
     // 攻击距离
 
-    if(distance < 100){
+    const distance =
+        Math.abs(player.x - cpu.x);
 
-        damageCPU(10);
+
+
+    let damage = 0;
+
+    let range = 0;
+
+
+    if(type === "punch"){
+
+        damage = 8;
+
+        range = 90;
+
+        playerEl.classList.add(
+            "punching"
+        );
 
     }
 
 
-    // 攻击动画
+    if(type === "kick"){
 
-    playerBox.style.transform =
-        "scaleX(1.2)";
+        damage = 12;
+
+        range = 110;
+
+        playerEl.classList.add(
+            "kicking"
+        );
+
+    }
 
 
-    setTimeout(function(){
 
-        playerBox.style.transform =
-            "scaleX(1)";
+    // 命中
 
-    },120);
+    if(distance <= range){
+
+        damageCPU(damage);
+
+    }
+
 
 
     // 攻击结束
@@ -170,18 +294,28 @@ function playerAttack(){
 
         player.attacking = false;
 
+        playerEl.classList.remove(
+            "punching"
+        );
+
+        playerEl.classList.remove(
+            "kicking"
+        );
+
     },180);
 
 
-    // cooldown
+
+    // 冷却
 
     setTimeout(function(){
 
-        player.attackCooldown = false;
+        player.cooldown = false;
 
     },350);
 
 }
+
 
 
 // ========================================
@@ -190,33 +324,17 @@ function playerAttack(){
 
 function cpuAI(){
 
-    let distance =
+    const distance =
         player.x - cpu.x;
 
-
-    let absDistance =
+    const absDistance =
         Math.abs(distance);
 
 
-    // CPU 面向玩家
 
-    if(distance < 0){
+    // CPU 靠近玩家
 
-        cpu.facing = -1;
-
-    }
-    else{
-
-        cpu.facing = 1;
-
-    }
-
-
-
-    // 玩家距离比较远
-    // CPU 靠近
-
-    if(absDistance > 110){
+    if(absDistance > 100){
 
         if(distance > 0){
 
@@ -232,17 +350,20 @@ function cpuAI(){
     }
 
 
-    // 靠近以后随机攻击
+    // 靠近后攻击
 
     else{
 
-        if(!cpu.attackCooldown){
+        if(
+            !cpu.attacking &&
+            !cpu.cooldown
+        ){
 
-            let random =
+            const random =
                 Math.random();
 
 
-            if(random < 0.035){
+            if(random < 0.025){
 
                 cpuAttack();
 
@@ -253,17 +374,21 @@ function cpuAI(){
     }
 
 
-    // CPU 不跑出场地
+    // 偶尔防御
 
-    if(cpu.x < 0){
-        cpu.x = 0;
-    }
+    cpu.blocking =
+        Math.random() < 0.01 &&
+        !cpu.attacking;
 
-    if(cpu.x > 840){
-        cpu.x = 840;
-    }
+
+    cpu.x =
+        Math.max(
+            0,
+            Math.min(840,cpu.x)
+        );
 
 }
+
 
 
 // ========================================
@@ -274,62 +399,87 @@ function cpuAttack(){
 
     cpu.attacking = true;
 
-    cpu.attackCooldown = true;
+    cpu.cooldown = true;
 
 
-    console.log("CPU ATTACK!");
 
-
-    let distance =
+    const distance =
         Math.abs(cpu.x - player.x);
 
 
-    if(distance < 100){
+    const kick =
+        Math.random() < 0.4;
 
-        damagePlayer(8);
+
+    const damage =
+        kick ? 10 : 7;
+
+
+    const range =
+        kick ? 110 : 90;
+
+
+
+    if(distance <= range){
+
+        damagePlayer(damage);
 
     }
 
 
-    cpuBox.style.transform =
-        "scaleX(1.2)";
 
+    if(kick){
 
-    setTimeout(function(){
+        cpuEl.classList.add(
+            "kicking"
+        );
 
-        cpuBox.style.transform =
-            "scaleX(1)";
+    }
+    else{
 
-    },120);
+        cpuEl.classList.add(
+            "punching"
+        );
+
+    }
+
 
 
     setTimeout(function(){
 
         cpu.attacking = false;
 
+        cpuEl.classList.remove(
+            "punching"
+        );
+
+        cpuEl.classList.remove(
+            "kicking"
+        );
+
     },180);
+
 
 
     setTimeout(function(){
 
-        cpu.attackCooldown = false;
+        cpu.cooldown = false;
 
     },700);
 
 }
 
 
+
 // ========================================
-// 玩家受伤
+// 玩家受到伤害
 // ========================================
 
 function damagePlayer(amount){
 
-    if(player.guarding){
+    if(player.blocking){
 
         amount *= 0.3;
-
-        console.log("BLOCK!");
 
     }
 
@@ -337,200 +487,214 @@ function damagePlayer(amount){
     player.hp -= amount;
 
 
-    if(player.hp < 0){
+    player.hp =
+        Math.max(
+            0,
+            player.hp
+        );
 
-        player.hp = 0;
 
-    }
-
-
-    playerBox.style.filter =
-        "brightness(3)";
+    playerEl.classList.add(
+        "hit"
+    );
 
 
     setTimeout(function(){
 
-        playerBox.style.filter =
-            "brightness(1)";
+        playerEl.classList.remove(
+            "hit"
+        );
 
     },100);
-
-
-    console.log(
-        "PLAYER HP:",
-        player.hp
-    );
 
 }
 
 
+
 // ========================================
-// CPU 受伤
+// CPU 受到伤害
 // ========================================
 
 function damageCPU(amount){
 
-    cpu.hp -= amount;
+    if(cpu.blocking){
 
-
-    if(cpu.hp < 0){
-
-        cpu.hp = 0;
+        amount *= 0.3;
 
     }
 
 
-    cpuBox.style.filter =
-        "brightness(3)";
+    cpu.hp -= amount;
+
+
+    cpu.hp =
+        Math.max(
+            0,
+            cpu.hp
+        );
+
+
+    cpuEl.classList.add(
+        "hit"
+    );
 
 
     setTimeout(function(){
 
-        cpuBox.style.filter =
-            "brightness(1)";
+        cpuEl.classList.remove(
+            "hit"
+        );
 
     },100);
 
+}
 
-    console.log(
-        "CPU HP:",
-        cpu.hp
-    );
+
+
+// ========================================
+// 更新血条
+// ========================================
+
+function updateHealth(){
+
+    playerBar.style.width =
+        player.hp + "%";
+
+
+    cpuBar.style.width =
+        cpu.hp + "%";
 
 }
 
 
-// ========================================
-// 血条
-// ========================================
-
-function drawHealth(){
-
-    // 如果你的 HTML 以后加入血条
-    // 这里可以直接控制
-
-
-    let playerBar =
-        document.querySelector("#playerBar");
-
-
-    let cpuBar =
-        document.querySelector("#cpuBar");
-
-
-    if(playerBar){
-
-        playerBar.style.width =
-            player.hp + "%";
-
-    }
-
-
-    if(cpuBar){
-
-        cpuBar.style.width =
-            cpu.hp + "%";
-
-    }
-
-}
-
 
 // ========================================
-// 胜负
+// 游戏结束
 // ========================================
 
 function checkWinner(){
 
     if(player.hp <= 0){
 
-        console.log(
-            "CPU WINS!"
-        );
+        message.innerText =
+            "CPU WINS!";
 
-        document.body.style.background =
-            "#400";
+        message.style.display =
+            "block";
+
+        return true;
 
     }
 
 
     if(cpu.hp <= 0){
 
-        console.log(
-            "PLAYER WINS!"
-        );
+        message.innerText =
+            "PLAYER WINS!";
 
-        document.body.style.background =
-            "#004";
+        message.style.display =
+            "block";
+
+        return true;
 
     }
+
+
+    return false;
 
 }
 
 
+
 // ========================================
-// 更新画面
+// 画面
 // ========================================
 
 function draw(){
 
-    playerBox.style.left =
+    playerEl.style.left =
         player.x + "px";
 
 
-    playerBox.style.bottom =
+    playerEl.style.bottom =
         (80 + player.y) + "px";
 
 
-    cpuBox.style.left =
+    cpuEl.style.left =
         cpu.x + "px";
 
 
-    cpuBox.style.bottom =
+    cpuEl.style.bottom =
         (80 + cpu.y) + "px";
+
+
+    if(player.blocking){
+
+        playerEl.classList.add(
+            "blocking"
+        );
+
+    }
+    else{
+
+        playerEl.classList.remove(
+            "blocking"
+        );
+
+    }
+
+
+    if(cpu.blocking){
+
+        cpuEl.classList.add(
+            "blocking"
+        );
+
+    }
+    else{
+
+        cpuEl.classList.remove(
+            "blocking"
+        );
+
+    }
 
 }
 
 
+
 // ========================================
-// 主游戏循环
+// 游戏循环
 // ========================================
 
 function gameLoop(){
 
-    playerMovement();
+    if(!checkWinner()){
 
-    cpuAI();
+        playerMovement();
 
-    draw();
+        gravity(player);
 
-    drawHealth();
+        gravity(cpu);
 
-    checkWinner();
+        cpuAI();
 
-    requestAnimationFrame(gameLoop);
+        draw();
+
+        updateHealth();
+
+        requestAnimationFrame(
+            gameLoop
+        );
+
+    }
 
 }
 
 
+
 // ========================================
-// J = 拳头
+// 开始
 // ========================================
-
-document.addEventListener(
-    "keydown",
-    function(e){
-
-        if(e.key.toLowerCase() === "j"){
-
-            playerAttack();
-
-        }
-
-    }
-);
-
-
-// 开始游戏
 
 gameLoop();
