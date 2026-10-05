@@ -1,174 +1,266 @@
-/* =================================
-   基础
-================================= */
-
-*{
-    box-sizing:border-box;
-}
- 
-
-body{
-
-    margin:0;
-
-    background:#111;
-
-    color:white;
-
-    text-align:center;
-
-    font-family:monospace;
-
+* {
+    box-sizing: border-box;
 }
 
-
-
-/* =================================
-   标题
-================================= */
-
-h1{
-
-    margin:20px 0 10px;
-
-    font-size:28px;
-
-    letter-spacing:4px;
-
+html, body {
+    margin: 0;
+    min-height: 100%;
 }
 
-
-
-/* =================================
-   血条 HUD
-================================= */
-
-.hud{
-
-    width:900px;
-
-    margin:0 auto 10px;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    gap:40px;
-
+body {
+    background: #111;
+    color: white;
+    font-family: monospace;
+    text-align: center;
+    overflow-x: hidden;
 }
 
-
-.health-container{
-
-    width:400px;
-
+button {
+    font-family: monospace;
+    font-weight: bold;
+    color: white;
+    background: #222;
+    border: 4px solid white;
+    cursor: pointer;
+    box-shadow: 5px 5px #000;
 }
 
-
-.name{
-
-    text-align:left;
-
-    font-size:18px;
-
-    margin-bottom:4px;
-
+button:hover {
+    background: #555;
 }
 
-
-.health{
-
-    height:28px;
-
-    background:#222;
-
-    border:3px solid white;
-
-    position:relative;
-
-    overflow:hidden;
-
+button:active {
+    transform: translate(3px, 3px);
+    box-shadow: 2px 2px #000;
 }
 
-
-.health-bar{
-
-    height:100%;
-
-    width:100%;
-
-    transition:width .15s;
-
+.screen {
+    display: none;
+    width: 960px;
+    min-height: 620px;
+    margin: 0 auto;
+    padding-top: 70px;
 }
 
-
-.player-health{
-
-    background:#22dd55;
-
+.screen.active {
+    display: block;
 }
 
+/* MENU */
 
-.cpu-health{
-
-    background:#e83232;
-
-    float:right;
-
+.title {
+    margin-top: 70px;
+    font-size: 58px;
+    letter-spacing: 8px;
+    text-shadow: 6px 6px #000;
 }
 
+.subtitle {
+    margin-top: 18px;
+    color: #aaa;
+    font-size: 18px;
+}
 
+.menu-buttons {
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+}
 
-/* =================================
-   游戏场地
-================================= */
+.menu-buttons button {
+    width: 280px;
+    padding: 16px;
+    font-size: 26px;
+}
 
-#game{
+/* GENERAL SCREENS */
 
-    width:900px;
+.screen-title {
+    font-size: 38px;
+    letter-spacing: 5px;
+    margin-bottom: 55px;
+    text-shadow: 4px 4px #000;
+}
 
-    height:500px;
+.instructions {
+    display: inline-block;
+    text-align: left;
+    font-size: 22px;
+    line-height: 2;
+    padding: 25px 45px;
+    border: 4px solid white;
+    background: #1c1c1c;
+    box-shadow: 6px 6px #000;
+}
 
-    margin:0 auto;
+.enjoy {
+    margin: 35px 0;
+    font-size: 22px;
+    color: #ffd84d;
+}
 
-    position:relative;
+#backButton,
+#selectBackButton {
+    padding: 12px 35px;
+    font-size: 20px;
+}
 
-    overflow:hidden;
+/* CHARACTER SELECT */
 
-    border:5px solid white;
+.fighters-select {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
 
+.fighter-choice {
+    width: 170px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    font-size: 19px;
+}
 
+.fighter-choice.selected {
+    background: #555;
+    border-color: #ffd84d;
+    box-shadow: 7px 7px #000;
+}
+
+.choice-character {
+    display: block;
+    width: 58px;
+    height: 100px;
+    position: relative;
+    border: 3px solid #111;
+}
+
+.choice-character::before {
+    content: "";
+    position: absolute;
+    width: 40px;
+    height: 34px;
+    left: 6px;
+    top: -3px;
+    background: #f2bd91;
+    border: 3px solid #111;
+}
+
+.choice-character::after {
+    content: "";
+    position: absolute;
+    width: 48px;
+    height: 55px;
+    left: 2px;
+    top: 31px;
+    border: 3px solid #111;
+}
+
+.blue-character { background: #222; }
+.red-character { background: #222; }
+.green-character { background: #222; }
+.yellow-character { background: #222; }
+
+.blue-character::after { background: #168cff; }
+.red-character::after { background: #e02b2b; }
+.green-character::after { background: #25b84a; }
+.yellow-character::after { background: #e8c82c; }
+
+.selected-text {
+    margin: 35px 0 25px;
+    font-size: 20px;
+}
+
+#confirmButton {
+    padding: 14px 45px;
+    font-size: 24px;
+}
+
+.secondary-button {
+    margin-left: 14px;
+    padding: 10px 22px;
+    font-size: 16px;
+}
+
+/* FIGHT */
+
+.fight-screen {
+    padding-top: 20px;
+}
+
+.hud {
+    width: 900px;
+    margin: 0 auto 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.health-container {
+    width: 400px;
+}
+
+.cpu-hud .name {
+    text-align: right;
+}
+
+.name {
+    text-align: left;
+    font-size: 18px;
+    margin-bottom: 4px;
+}
+
+.health {
+    height: 28px;
+    background: #222;
+    border: 3px solid white;
+    position: relative;
+    overflow: hidden;
+}
+
+.health-bar {
+    height: 100%;
+    width: 100%;
+    transition: width .15s;
+}
+
+.player-health {
+    background: #22dd55;
+}
+
+.cpu-health {
+    background: #e83232;
+    float: right;
+}
+
+#game {
+    width: 900px;
+    height: 500px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border: 5px solid white;
     background:
-
         linear-gradient(
             #4c9ed8 0%,
             #9bd4e8 55%,
             #555 55%,
             #222 100%
         );
-
 }
 
-
-
-/* =================================
-   地面
-================================= */
-
-.floor{
-
-    position:absolute;
-
-    bottom:0;
-
-    left:0;
-
-    width:100%;
-
-    height:80px;
-
+.floor {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
     background:
-
         repeating-linear-gradient(
             45deg,
             #444 0px,
@@ -176,275 +268,119 @@ h1{
             #333 20px,
             #333 40px
         );
-
-    border-top:4px solid #888;
-
+    border-top: 4px solid #888;
 }
 
-
-
-/* =================================
-   角色
-================================= */
-
-.fighter{
-
-    position:absolute;
-
-    width:60px;
-
-    height:110px;
-
-    bottom:80px;
-
-    transition:filter .05s;
-
+.fighter {
+    position: absolute;
+    width: 60px;
+    height: 110px;
+    bottom: 80px;
+    z-index: 5;
+    transition: filter .05s;
 }
 
-
-
-/* 玩家 */
-
-.player{
-
-    left:180px;
-
+.player {
+    left: 180px;
 }
 
-
-
-/* CPU */
-
-.cpu{
-
-    left:700px;
-
+.cpu {
+    left: 700px;
 }
 
-
-
-/* =================================
-   头
-================================= */
-
-.head{
-
-    position:absolute;
-
-    width:42px;
-
-    height:36px;
-
-    left:9px;
-
-    top:0;
-
-    background:#f2bd91;
-
-    border:3px solid #111;
-
+.fighter .head {
+    position: absolute;
+    width: 42px;
+    height: 36px;
+    left: 9px;
+    top: 0;
+    background: #f2bd91;
+    border: 3px solid #111;
 }
 
-
-
-/* =================================
-   身体
-================================= */
-
-.body{
-
-    position:absolute;
-
-    width:50px;
-
-    height:55px;
-
-    left:5px;
-
-    top:34px;
-
-    border:3px solid #111;
-
+.fighter .body {
+    position: absolute;
+    width: 50px;
+    height: 55px;
+    left: 5px;
+    top: 34px;
+    border: 3px solid #111;
 }
 
+.fighter.blue .body { background: #168cff; }
+.fighter.red .body { background: #e02b2b; }
+.fighter.green .body { background: #25b84a; }
+.fighter.yellow .body { background: #e8c82c; }
 
-.player .body{
-
-    background:#168cff;
-
+.leg {
+    position: absolute;
+    width: 18px;
+    height: 35px;
+    bottom: 0;
+    background: #222;
 }
 
+.left-leg { left: 8px; }
+.right-leg { right: 8px; }
 
-.cpu .body{
-
-    background:#e02b2b;
-
+.punching {
+    transform: translateX(12px);
 }
 
-
-
-/* =================================
-   腿
-================================= */
-
-.leg{
-
-    position:absolute;
-
-    width:18px;
-
-    height:35px;
-
-    bottom:0;
-
-    background:#222;
-
+.kicking {
+    transform: translateX(16px);
 }
 
-
-.left-leg{
-
-    left:8px;
-
+.hit {
+    filter: brightness(3);
 }
 
-
-.right-leg{
-
-    right:8px;
-
+.blocking {
+    filter: brightness(.55);
 }
 
-
-
-/* =================================
-   攻击时的视觉
-================================= */
-
-.punching{
-
-    transform:translateX(12px);
-
+.message {
+    position: absolute;
+    z-index: 20;
+    width: 100%;
+    top: 150px;
+    text-align: center;
+    font-size: 48px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 4px 4px #000;
+    display: none;
 }
 
-
-.kicking{
-
-    transform:translateX(16px);
-
+.message button {
+    display: block;
+    margin: 18px auto 0;
+    padding: 10px 24px;
+    font-size: 18px;
 }
 
-
-
-/* =================================
-   受击闪白
-================================= */
-
-.hit{
-
-    filter:brightness(3);
-
+.controls {
+    margin-top: 12px;
+    font-size: 15px;
+    color: #ccc;
 }
 
+@media (max-width: 980px) {
+    .screen {
+        width: 100%;
+    }
 
+    #game,
+    .hud {
+        width: 94vw;
+    }
 
-/* =================================
-   防御
-================================= */
+    #game {
+        height: 53vw;
+        max-height: 500px;
+    }
 
-.blocking{
-
-    filter:brightness(.55);
-
-}
-
-
-
-/* =================================
-   胜负
-================================= */
-
-.message{
-
-    position:absolute;
-
-    width:100%;
-
-    top:190px;
-
-    text-align:center;
-
-    font-size:48px;
-
-    font-weight:bold;
-
-    color:white;
-
-    text-shadow:
-        4px 4px #000;
-
-    display:none;
-
-}
-
-
-
-/* =================================
-   操作说明
-================================= */
-
-.controls{
-
-    margin-top:12px;
-
-    font-size:15px;
-
-    color:#ccc;
-
-}
-
-
-
-/* ================================
-   Restart Button
-================================ */
-
-.message button{
-
-    margin-top:25px;
-
-    padding:12px 28px;
-
-    font-family:monospace;
-
-    font-size:20px;
-
-    font-weight:bold;
-
-    color:white;
-
-    background:#222;
-
-    border:4px solid white;
-
-    cursor:pointer;
-
-    box-shadow:4px 4px #000;
-
-}
-
-
-.message button:hover{
-
-    background:#555;
-
-}
-
-
-.message button:active{
-
-    transform:translate(3px,3px);
-
-    box-shadow:1px 1px #000;
-
+    .fighters-select {
+        flex-wrap: wrap;
+    }
 }
