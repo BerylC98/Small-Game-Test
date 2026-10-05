@@ -1,136 +1,356 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pixel Fighter</title>
+
+<title>Birthday Brawl</title>
+
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <div id="app">
 
+    <!-- ========================= -->
     <!-- MAIN MENU -->
+    <!-- ========================= -->
+
     <section id="menuScreen" class="screen active">
-        <div class="title">YEYMAR FIGHTER</div>
-        <div class="subtitle">A Tiny Pixel Fighting Game For You</div>
+
+        <div class="title">
+            BIRTHDAY BRAWL
+        </div>
+
+        <div class="subtitle">
+            A Tiny Pixel Fighting Game
+        </div>
 
         <div class="menu-buttons">
-            <button id="startButton">START</button>
-            <button id="howToButton">HOW TO PLAY</button>
+
+            <button id="startButton">
+                START
+            </button>
+
+            <button id="howToButton">
+                HOW TO PLAY
+            </button>
+
         </div>
+
     </section>
 
+
+    <!-- ========================= -->
     <!-- HOW TO PLAY -->
+    <!-- ========================= -->
+
     <section id="howToScreen" class="screen">
-        <div class="screen-title">HOW TO PLAY</div>
+
+        <div class="screen-title">
+            HOW TO PLAY
+        </div>
 
         <div class="instructions">
+
             <div>A / D &nbsp;&nbsp; MOVE</div>
+
             <div>W &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JUMP</div>
+
             <div>J &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PUNCH</div>
+
             <div>K &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; KICK</div>
+
             <div>S &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BLOCK</div>
+
         </div>
 
-        <p class="enjoy">Enjoy your game!</p>
+        <p class="enjoy">
+            Enjoy your game!
+        </p>
 
-        <button id="backButton">BACK</button>
+        <button id="backButton">
+            BACK
+        </button>
+
     </section>
 
+
+    <!-- ========================= -->
     <!-- CHARACTER SELECT -->
+    <!-- ========================= -->
+
     <section id="selectScreen" class="screen">
-        <div class="screen-title">CHOOSE YOUR FIGHTER</div>
+
+        <div class="screen-title">
+            CHOOSE YOUR FIGHTER
+        </div>
+
 
         <div class="fighters-select">
 
-            <button class="fighter-choice selected" data-color="blue">
+
+            <!-- BLUE -->
+
+            <button
+                class="fighter-choice"
+                data-color="blue"
+            >
+
                 <span class="choice-character blue-character"></span>
-                <span>BLUE</span>
+
+                <span>
+                    BLUE
+                </span>
+
             </button>
 
-            <button class="fighter-choice" data-color="red">
-                <span class="choice-character red-character"></span>
-                <span>RED</span>
+
+            <!-- 小红 -->
+
+            <button
+                class="fighter-choice selected"
+                data-color="red"
+            >
+
+                <img
+                    class="profile-image"
+                    src="Character/Kiryu/Profile.png"
+                    alt="小红"
+                >
+
+                <span>
+                    小红
+                </span>
+
             </button>
 
-            <button class="fighter-choice" data-color="green">
+
+            <!-- GREEN -->
+
+            <button
+                class="fighter-choice"
+                data-color="green"
+            >
+
                 <span class="choice-character green-character"></span>
-                <span>GREEN</span>
+
+                <span>
+                    GREEN
+                </span>
+
             </button>
 
-            <button class="fighter-choice" data-color="yellow">
+
+            <!-- YELLOW -->
+
+            <button
+                class="fighter-choice"
+                data-color="yellow"
+            >
+
                 <span class="choice-character yellow-character"></span>
-                <span>YELLOW</span>
+
+                <span>
+                    YELLOW
+                </span>
+
             </button>
+
 
         </div>
+
 
         <div class="selected-text">
-            SELECTED: <span id="selectedName">BLUE</span>
+
+            SELECTED:
+            <span id="selectedName">
+                小红
+            </span>
+
         </div>
 
-        <button id="confirmButton">FIGHT!</button>
-        <button id="selectBackButton" class="secondary-button">BACK</button>
+
+        <button id="confirmButton">
+            FIGHT!
+        </button>
+
+        <button
+            id="selectBackButton"
+            class="secondary-button"
+        >
+            BACK
+        </button>
+
     </section>
 
+
+    <!-- ========================= -->
     <!-- FIGHT -->
-    <section id="fightScreen" class="screen fight-screen">
+    <!-- ========================= -->
+
+    <section
+        id="fightScreen"
+        class="screen fight-screen"
+    >
+
+
+        <!-- HEALTH -->
 
         <div class="hud">
 
+
             <div class="health-container">
-                <div class="name">PLAYER</div>
-                <div class="health">
-                    <div id="playerBar" class="health-bar player-health"></div>
+
+                <div class="name">
+                    小红
                 </div>
+
+                <div class="health">
+
+                    <div
+                        id="playerBar"
+                        class="health-bar player-health"
+                    ></div>
+
+                </div>
+
             </div>
+
 
             <div class="health-container cpu-hud">
-                <div class="name">CPU</div>
-                <div class="health">
-                    <div id="cpuBar" class="health-bar cpu-health"></div>
+
+                <div class="name">
+                    CPU
                 </div>
+
+                <div class="health">
+
+                    <div
+                        id="cpuBar"
+                        class="health-bar cpu-health"
+                    ></div>
+
+                </div>
+
             </div>
 
+
         </div>
+
+
+        <!-- ========================= -->
+        <!-- GAME -->
+        <!-- ========================= -->
 
         <div id="game">
 
-            <div id="player" class="fighter player blue">
-                <div class="head"></div>
-                <div class="body"></div>
-                <div class="leg left-leg"></div>
-                <div class="leg right-leg"></div>
+
+            <!-- PLAYER -->
+
+            <div
+                id="player"
+                class="fighter player"
+            >
+
+                <img
+                    id="playerSprite"
+                    src="Character/Kiryu/idle_01.png"
+                    alt="小红"
+                >
+
             </div>
 
-            <div id="cpu" class="fighter cpu red">
-                <div class="head"></div>
-                <div class="body"></div>
-                <div class="leg left-leg"></div>
-                <div class="leg right-leg"></div>
+
+            <!-- CPU -->
+
+            <div
+                id="cpu"
+                class="fighter cpu"
+            >
+
+                <div class="cpu-head"></div>
+
+                <div class="cpu-body"></div>
+
+                <div class="cpu-leg cpu-leg-left"></div>
+
+                <div class="cpu-leg cpu-leg-right"></div>
+
             </div>
+
+
+            <!-- OLD FLOOR ELEMENT -->
+            <!-- Kept for positioning only -->
 
             <div class="floor"></div>
 
-            <div id="message" class="message">
+
+            <!-- ========================= -->
+            <!-- MESSAGE -->
+            <!-- ========================= -->
+
+            <div
+                id="message"
+                class="message"
+            >
+
                 <div id="resultText"></div>
-                <button id="restartButton">PLAY AGAIN</button>
-                <button id="characterButton" class="secondary-button">CHARACTER SELECT</button>
-                <button id="menuButton" class="secondary-button">MAIN MENU</button>
+
+
+                <button
+                    id="restartButton"
+                >
+                    PLAY AGAIN
+                </button>
+
+
+                <button
+                    id="characterButton"
+                    class="secondary-button"
+                >
+                    CHARACTER SELECT
+                </button>
+
+
+                <button
+                    id="menuButton"
+                    class="secondary-button"
+                >
+                    MAIN MENU
+                </button>
+
             </div>
 
+
         </div>
 
+
         <div class="controls">
-            A / D — MOVE &nbsp;&nbsp; W — JUMP &nbsp;&nbsp;
-            J — PUNCH &nbsp;&nbsp; K — KICK &nbsp;&nbsp; S — BLOCK
+
+            A / D — MOVE
+            &nbsp;&nbsp;
+            W — JUMP
+            &nbsp;&nbsp;
+            J — PUNCH
+            &nbsp;&nbsp;
+            K — KICK
+            &nbsp;&nbsp;
+            S — BLOCK
+
         </div>
+
 
     </section>
 
+
 </div>
 
+
 <script src="game.js"></script>
+
 </body>
+
 </html>
