@@ -245,13 +245,11 @@ button:active {
     position: relative;
     overflow: hidden;
     border: 5px solid white;
-    background:
-        linear-gradient(
-            #4c9ed8 0%,
-            #9bd4e8 55%,
-            #555 55%,
-            #222 100%
-        );
+
+    background-image: url("Sunset Sakura Town Street.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .floor {
