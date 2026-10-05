@@ -7,9 +7,7 @@
 
 <title>Pixel Street Fighter</title>
 
-
 <link rel="stylesheet" href="style.css">
-
 
 </head>
 
@@ -17,23 +15,129 @@
 <body>
 
 
-<h1>
-PIXEL STREET FIGHTER
-</h1>
+<h1>PIXEL STREET FIGHTER</h1>
 
 
+<!-- 血条 -->
+
+<div class="hud">
+
+    <div class="health-container">
+
+        <div class="name">
+            PLAYER
+        </div>
+
+        <div class="health">
+
+            <div
+                id="playerBar"
+                class="health-bar player-health">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="health-container">
+
+        <div class="name">
+            CPU
+        </div>
+
+        <div class="health cpu-health-container">
+
+            <div
+                id="cpuBar"
+                class="health-bar cpu-health">
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- 游戏 -->
 
 <div id="game">
 
 
-<div class="fighter player"></div>
+    <!-- 玩家 -->
+
+    <div
+        class="fighter player"
+        id="player">
+
+        <div class="head"></div>
+
+        <div class="body"></div>
+
+        <div class="leg left-leg"></div>
+
+        <div class="leg right-leg"></div>
+
+    </div>
 
 
-<div class="fighter cpu"></div>
+
+    <!-- CPU -->
+
+    <div
+        class="fighter cpu"
+        id="cpu">
+
+        <div class="head"></div>
+
+        <div class="body"></div>
+
+        <div class="leg left-leg"></div>
+
+        <div class="leg right-leg"></div>
+
+    </div>
 
 
-<div class="floor"></div>
 
+    <!-- 地面 -->
+
+    <div class="floor"></div>
+
+
+    <!-- 胜负 -->
+
+    <div
+        id="message"
+        class="message">
+    </div>
+
+
+</div>
+
+
+
+<div class="controls">
+
+    A / D — MOVE
+
+    &nbsp;&nbsp;
+
+    W — JUMP
+
+    &nbsp;&nbsp;
+
+    J — PUNCH
+
+    &nbsp;&nbsp;
+
+    K — KICK
+
+    &nbsp;&nbsp;
+
+    S — BLOCK
 
 </div>
 
@@ -43,6 +147,5 @@ PIXEL STREET FIGHTER
 
 
 </body>
-
 
 </html>
