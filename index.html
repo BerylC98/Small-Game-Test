@@ -2,23 +2,32 @@
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>YEYMAR FIGHTER</title>
 
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet"
+      href="style.css">
+
 </head>
+
 
 <body>
 
+
 <div id="app">
+
 
     <!-- ========================= -->
     <!-- MAIN MENU -->
     <!-- ========================= -->
 
-    <section id="menuScreen" class="screen active">
+    <section id="menuScreen"
+             class="screen active">
 
         <div class="title">
             YEYMAR FIGHTER
@@ -43,11 +52,13 @@
     </section>
 
 
+
     <!-- ========================= -->
     <!-- HOW TO PLAY -->
     <!-- ========================= -->
 
-    <section id="howToScreen" class="screen">
+    <section id="howToScreen"
+             class="screen">
 
         <div class="screen-title">
             HOW TO PLAY
@@ -55,21 +66,31 @@
 
         <div class="instructions">
 
-            <div>A / D &nbsp;&nbsp; MOVE</div>
+            <div>
+                A / D &nbsp; — &nbsp; Move
+            </div>
 
-            <div>W &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JUMP</div>
+            <div>
+                W &nbsp; — &nbsp; Jump
+            </div>
 
-            <div>J &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PUNCH</div>
+            <div>
+                J &nbsp; — &nbsp; Punch
+            </div>
 
-            <div>K &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; KICK</div>
+            <div>
+                K &nbsp; — &nbsp; Kick
+            </div>
 
-            <div>S &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BLOCK</div>
+            <div>
+                S &nbsp; — &nbsp; Block
+            </div>
 
         </div>
 
-        <p class="enjoy">
+        <div class="enjoy">
             Enjoy your game!
-        </p>
+        </div>
 
         <button id="backButton">
             BACK
@@ -78,141 +99,179 @@
     </section>
 
 
+
     <!-- ========================= -->
     <!-- CHARACTER SELECT -->
     <!-- ========================= -->
 
-    <section id="selectScreen" class="screen">
+    <section id="selectScreen"
+             class="screen">
 
         <div class="screen-title">
-            CHOOSE YOUR FIGHTER
+            SELECT YOUR FIGHTER
         </div>
 
 
-<div class="fighters-select">
-
-    <button class="fighter-choice selected"
-            data-character="Kiryu">
-
-        <img
-            class="profile-image"
-            src="Character/Kiryu/profile.png"
-            alt="桐生"
-        >
-
-        <span>桐生</span>
-
-    </button>
+        <div class="fighters-select">
 
 
-    <button class="fighter-choice"
-            data-character="Zhaoyun">
+            <!-- CAT -->
 
-        <img
-            class="profile-image"
-            src="Character/Zhaoyun/profile.png"
-            alt="赵云"
-        >
+            <button class="fighter-choice selected"
+                    data-character="Cat">
 
-        <span>赵云</span>
+                <img
+                    class="profile-image"
+                    src="Character/Cat/profile.png"
+                    alt="小猫">
 
-    </button>
+                <span>
+                    小猫
+                </span>
 
-
-    <button class="fighter-choice"
-            data-character="Kugga">
-
-        <img
-            class="profile-image"
-            src="Character/Kugga/profile.png"
-            alt="空我"
-        >
-
-        <span>空我</span>
-
-    </button>
+            </button>
 
 
-    <button class="fighter-choice"
-            data-character="Cat">
 
-        <img
-            class="profile-image"
-            src="Character/Cat/profile.png"
-            alt="小猫"
-        >
+            <!-- KIRYU -->
 
-        <span>小猫</span>
+            <button class="fighter-choice"
+                    data-character="Kiryu">
 
-    </button>
+                <img
+                    class="profile-image"
+                    src="Character/Kiryu/profile.png"
+                    alt="桐生">
 
-</div>
+                <span>
+                    桐生
+                </span>
 
-
-<div class="selected-text">
-    Selected Fighter:
-    <strong id="selectedName">桐生</strong>
-</div>
+            </button>
 
 
-<div>
-    <button id="confirmButton">
-        FIGHT!
-    </button>
 
-    <button
-        id="selectBackButton"
-        class="secondary-button">
-        BACK
-    </button>
-</div>
+            <!-- KUGGA -->
+
+            <button class="fighter-choice"
+                    data-character="Kugga">
+
+                <img
+                    class="profile-image"
+                    src="Character/Kugga/profile.png"
+                    alt="空我">
+
+                <span>
+                    空我
+                </span>
+
+            </button>
+
+
+
+            <!-- ZHAOYUN -->
+
+            <button class="fighter-choice"
+                    data-character="Zhaoyun">
+
+                <img
+                    class="profile-image"
+                    src="Character/Zhaoyun/profile.png"
+                    alt="赵云">
+
+                <span>
+                    赵云
+                </span>
+
+            </button>
+
+
+        </div>
+
+
+        <div class="selected-text">
+
+            Selected:
+            <strong id="selectedName">
+                小猫
+            </strong>
+
+        </div>
+
+
+        <div class="select-buttons">
+
+            <button id="confirmButton">
+                FIGHT!
+            </button>
+
+            <button id="selectBackButton"
+                    class="secondary-button">
+
+                BACK
+
+            </button>
+
+        </div>
+
+    </section>
+
 
 
     <!-- ========================= -->
-    <!-- FIGHT -->
+    <!-- FIGHT SCREEN -->
     <!-- ========================= -->
 
-    <section
-        id="fightScreen"
-        class="screen fight-screen"
-    >
+    <section id="fightScreen"
+             class="screen fight-screen">
 
 
-        <!-- HEALTH -->
+        <!-- HUD -->
 
         <div class="hud">
 
 
+            <!-- PLAYER -->
+
             <div class="health-container">
 
-                <div class="name">
-                    桐生
+                <div class="name"
+                     id="playerName">
+
+                    小猫
+
                 </div>
 
                 <div class="health">
 
                     <div
                         id="playerBar"
-                        class="health-bar player-health"
-                    ></div>
+                        class="health-bar player-health">
+                    </div>
 
                 </div>
 
             </div>
 
 
+
+            <!-- CPU -->
+
             <div class="health-container cpu-hud">
 
-                <div class="name">
+                <div class="name"
+                     id="cpuName">
+
                     CPU
+
                 </div>
 
                 <div class="health">
 
                     <div
                         id="cpuBar"
-                        class="health-bar cpu-health"
-                    ></div>
+                        class="health-bar cpu-health">
+                    </div>
 
                 </div>
 
@@ -222,77 +281,73 @@
         </div>
 
 
+
         <!-- ========================= -->
-        <!-- GAME -->
+        <!-- GAME STAGE -->
         <!-- ========================= -->
 
         <div id="game">
 
 
-            <!-- PLAYER -->
-
-            <div
-                id="player"
-                class="fighter player"
-            >
-
-                <img
-                    id="playerSprite"
-                    src="Character/Kiryu/idle_01.png"
-                    alt="小红"
-                >
-
-            </div>
-
-
-            <!-- CPU -->
-
-           <div id="cpu" class="cpu">
-    <img
-        id="cpuSprite"
-        src=""
-        alt="CPU Fighter"
-    >
-</div>
-
-
-            <!-- OLD FLOOR ELEMENT -->
-            <!-- Kept for positioning only -->
+            <!-- FLOOR -->
 
             <div class="floor"></div>
 
 
+
             <!-- ========================= -->
-            <!-- MESSAGE -->
+            <!-- PLAYER -->
             <!-- ========================= -->
 
-            <div
-                id="message"
-                class="message"
-            >
+            <div id="player"
+                 class="fighter player">
+
+                <img
+                    id="playerSprite"
+                    src="Character/Cat/idle_01.png"
+                    alt="Player">
+
+            </div>
+
+
+
+            <!-- ========================= -->
+            <!-- CPU -->
+            <!-- ========================= -->
+
+            <div id="cpu"
+                 class="fighter cpu">
+
+                <img
+                    id="cpuSprite"
+                    src="Character/Kiryu/idle_01.png"
+                    alt="CPU">
+
+            </div>
+
+
+
+            <!-- ========================= -->
+            <!-- ROUND / END MESSAGE -->
+            <!-- ========================= -->
+
+            <div id="message"
+                 class="message">
 
                 <div id="resultText"></div>
 
 
-                <button
-                    id="restartButton"
-                >
+                <button id="restartButton">
                     PLAY AGAIN
                 </button>
 
 
-                <button
-                    id="characterButton"
-                    class="secondary-button"
-                >
-                    CHARACTER SELECT
+                <button id="characterButton">
+                    CHANGE CHARACTER
                 </button>
 
 
-                <button
-                    id="menuButton"
-                    class="secondary-button"
-                >
+                <button id="menuButton">
                     MAIN MENU
                 </button>
 
@@ -302,17 +357,16 @@
         </div>
 
 
+
+        <!-- CONTROLS -->
+
         <div class="controls">
 
-            A / D — MOVE
-            &nbsp;&nbsp;
-            W — JUMP
-            &nbsp;&nbsp;
-            J — PUNCH
-            &nbsp;&nbsp;
-            K — KICK
-            &nbsp;&nbsp;
-            S — BLOCK
+            A / D Move &nbsp; | &nbsp;
+            W Jump &nbsp; | &nbsp;
+            J Punch &nbsp; | &nbsp;
+            K Kick &nbsp; | &nbsp;
+            S Block
 
         </div>
 
@@ -324,6 +378,7 @@
 
 
 <script src="game.js"></script>
+
 
 </body>
 
