@@ -1,13 +1,3 @@
-/* ========================================
-   PIXEL FIGHTER
-   Main Stylesheet
-   ======================================== */
-
-
-/* ========================================
-   GLOBAL
-   ======================================== */
-
 * {
     box-sizing: border-box;
 }
@@ -27,9 +17,9 @@ body {
 }
 
 
-/* ========================================
-   BUTTONS
-   ======================================== */
+/* ========================= */
+/* BUTTONS */
+/* ========================= */
 
 button {
     font-family: monospace;
@@ -51,9 +41,9 @@ button:active {
 }
 
 
-/* ========================================
-   SCREENS
-   ======================================== */
+/* ========================= */
+/* SCREENS */
+/* ========================= */
 
 .screen {
     display: none;
@@ -68,9 +58,9 @@ button:active {
 }
 
 
-/* ========================================
-   MAIN MENU
-   ======================================== */
+/* ========================= */
+/* MENU */
+/* ========================= */
 
 .title {
     margin-top: 70px;
@@ -100,9 +90,9 @@ button:active {
 }
 
 
-/* ========================================
-   HOW TO PLAY
-   ======================================== */
+/* ========================= */
+/* HOW TO PLAY */
+/* ========================= */
 
 .screen-title {
     font-size: 38px;
@@ -135,40 +125,26 @@ button:active {
 }
 
 
-/* ========================================
-   CHARACTER SELECT
-   ======================================== */
+/* ========================= */
+/* CHARACTER SELECT */
+/* ========================= */
 
 .fighters-select {
     display: flex;
     justify-content: center;
-    align-items: stretch;
     gap: 25px;
 }
 
-
-/* Individual fighter card */
-
 .fighter-choice {
     width: 170px;
-    height: 330px;
-    padding: 14px;
-
+    height: 220px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
-    gap: 18px;
-
-    font-size: 21px;
-
-    background: #222;
-    border: 4px solid white;
+    gap: 22px;
+    font-size: 19px;
 }
-
-
-/* Selected fighter */
 
 .fighter-choice.selected {
     background: #555;
@@ -176,48 +152,74 @@ button:active {
     box-shadow: 7px 7px #000;
 }
 
-
-/* Profile image */
-
 .profile-image {
-    width: 135px;
-    height: 210px;
-
+    width: 95px;
+    height: 115px;
     object-fit: contain;
+}
 
+.choice-character {
     display: block;
+    width: 58px;
+    height: 100px;
+    position: relative;
+    border: 3px solid #111;
 }
 
-
-/* Fighter name */
-
-.fighter-choice span {
-    font-size: 23px;
-    line-height: 1;
+.choice-character::before {
+    content: "";
+    position: absolute;
+    width: 40px;
+    height: 34px;
+    left: 6px;
+    top: -3px;
+    background: #f2bd91;
+    border: 3px solid #111;
 }
 
+.choice-character::after {
+    content: "";
+    position: absolute;
+    width: 48px;
+    height: 55px;
+    left: 2px;
+    top: 31px;
+    border: 3px solid #111;
+}
 
-/* Selected fighter text */
+.blue-character {
+    background: #222;
+}
+
+.blue-character::after {
+    background: #168cff;
+}
+
+.green-character {
+    background: #222;
+}
+
+.green-character::after {
+    background: #25b84a;
+}
+
+.yellow-character {
+    background: #222;
+}
+
+.yellow-character::after {
+    background: #e8c82c;
+}
 
 .selected-text {
     margin: 35px 0 25px;
     font-size: 20px;
 }
 
-.selected-text strong {
-    font-size: 24px;
-}
-
-
-/* Fight button */
-
 #confirmButton {
     padding: 14px 45px;
     font-size: 24px;
 }
-
-
-/* Back button */
 
 .secondary-button {
     margin-left: 14px;
@@ -226,31 +228,28 @@ button:active {
 }
 
 
-/* ========================================
-   FIGHT SCREEN
-   ======================================== */
+/* ========================= */
+/* FIGHT */
+/* ========================= */
 
 .fight-screen {
     padding-top: 20px;
 }
 
-
-/* ========================================
-   HEALTH HUD
-   ======================================== */
-
 .hud {
     width: 900px;
     margin: 0 auto 10px;
-
     display: flex;
     justify-content: space-between;
-
     gap: 40px;
 }
 
 .health-container {
     width: 400px;
+}
+
+.cpu-hud .name {
+    text-align: right;
 }
 
 .name {
@@ -259,44 +258,23 @@ button:active {
     margin-bottom: 4px;
 }
 
-.cpu-hud .name {
-    text-align: right;
-}
-
-
-/* Health bar container */
-
 .health {
     height: 28px;
-
     background: #222;
-
     border: 3px solid white;
-
     position: relative;
-
     overflow: hidden;
 }
-
-
-/* Health fill */
 
 .health-bar {
     height: 100%;
     width: 100%;
-
     transition: width .15s;
 }
-
-
-/* Player HP */
 
 .player-health {
     background: #22dd55;
 }
-
-
-/* CPU HP */
 
 .cpu-health {
     background: #e83232;
@@ -304,55 +282,46 @@ button:active {
 }
 
 
-/* ========================================
-   GAME STAGE
-   ======================================== */
+/* ========================= */
+/* GAME STAGE */
+/* ========================= */
 
 #game {
     width: 900px;
     height: 500px;
-
     margin: 0 auto;
-
     position: relative;
-
     overflow: hidden;
-
     border: 5px solid white;
 
     background-image:
         url("Sunset Sakura Town Street.png");
 
     background-size: cover;
-
     background-position: center;
-
     background-repeat: no-repeat;
 }
 
 
-/* Invisible floor */
+/* ========================= */
+/* FLOOR */
+/* ========================= */
 
 .floor {
     position: absolute;
-
     bottom: 0;
     left: 0;
-
     width: 100%;
     height: 80px;
-
     background: transparent;
-
     border: none;
-
     pointer-events: none;
 }
 
 
-/* ========================================
-   PLAYER
-   ======================================== */
+/* ========================= */
+/* REAL PLAYER SPRITE */
+/* ========================= */
 
 .fighter.player {
     position: absolute;
@@ -360,7 +329,11 @@ button:active {
     width: 125px;
     height: 180px;
 
+    /*
+       Lower the character.
+    */
     bottom: 8px;
+
     left: 150px;
 
     z-index: 5;
@@ -368,8 +341,6 @@ button:active {
     transition: filter .05s;
 }
 
-
-/* Player sprite */
 
 #playerSprite {
     width: 100%;
@@ -381,49 +352,72 @@ button:active {
 }
 
 
-/* ========================================
-   CPU
-   ======================================== */
+/* ========================= */
+/* CPU PLACEHOLDER */
+/* ========================= */
 
 .cpu {
     position: absolute;
 
-    width: 125px;
-    height: 180px;
-
-    bottom: 8px;
     left: 700px;
 
+    width: 60px;
+    height: 110px;
+
+    bottom: 8px;
+
     z-index: 5;
+}
 
-    transition: filter .05s;
+.cpu-head {
+    position: absolute;
+    width: 42px;
+    height: 36px;
+    left: 9px;
+    top: 0;
+    background: #f2bd91;
+    border: 3px solid #111;
+}
+
+.cpu-body {
+    position: absolute;
+    width: 50px;
+    height: 55px;
+    left: 5px;
+    top: 34px;
+    background: #e02b2b;
+    border: 3px solid #111;
+}
+
+.cpu-leg {
+    position: absolute;
+    width: 18px;
+    height: 35px;
+    bottom: 0;
+    background: #222;
+}
+
+.cpu-leg-left {
+    left: 8px;
+}
+
+.cpu-leg-right {
+    right: 8px;
 }
 
 
-/* CPU sprite */
-
-#cpuSprite {
-    width: 100%;
-    height: 100%;
-
-    object-fit: contain;
-
-    display: block;
-}
-
-
-/* ========================================
-   BLOCKING EFFECT
-   ======================================== */
+/* ========================= */
+/* STATES */
+/* ========================= */
 
 .blocking {
     filter: brightness(.65);
 }
 
 
-/* ========================================
-   ROUND / END MESSAGE
-   ======================================== */
+/* ========================= */
+/* MESSAGE */
+/* ========================= */
 
 .message {
     position: absolute;
@@ -456,38 +450,29 @@ button:active {
     display: none;
 }
 
-
-/* Message buttons */
-
 .message button {
     display: block;
-
     margin: 18px auto 0;
-
     padding: 10px 24px;
-
     font-size: 18px;
-
     font-family: monospace;
 }
 
 
-/* ========================================
-   CONTROLS TEXT
-   ======================================== */
+/* ========================= */
+/* CONTROLS */
+/* ========================= */
 
 .controls {
     margin-top: 12px;
-
     font-size: 15px;
-
     color: #ccc;
 }
 
 
-/* ========================================
-   RESPONSIVE
-   ======================================== */
+/* ========================= */
+/* MOBILE */
+/* ========================= */
 
 @media (max-width: 980px) {
 
@@ -495,21 +480,17 @@ button:active {
         width: 100%;
     }
 
-
     #game,
     .hud {
         width: 94vw;
     }
-
 
     #game {
         height: 53vw;
         max-height: 500px;
     }
 
-
     .fighters-select {
         flex-wrap: wrap;
     }
-
 }
