@@ -1,8 +1,7 @@
 // ========================================
 // PIXEL FIGHTER
-// Kiryu / 小红
+// Kiryu / 桐生
 // ========================================
-
 
 const screens = {
     menu: document.getElementById("menuScreen"),
@@ -10,7 +9,6 @@ const screens = {
     select: document.getElementById("selectScreen"),
     fight: document.getElementById("fightScreen")
 };
-
 
 const startButton =
     document.getElementById("startButton");
@@ -27,13 +25,11 @@ const selectBackButton =
 const confirmButton =
     document.getElementById("confirmButton");
 
-
 const fighterChoices =
     document.querySelectorAll(".fighter-choice");
 
 const selectedName =
     document.getElementById("selectedName");
-
 
 const playerEl =
     document.getElementById("player");
@@ -41,10 +37,8 @@ const playerEl =
 const playerSprite =
     document.getElementById("playerSprite");
 
-
 const cpuEl =
     document.getElementById("cpu");
-
 
 const playerBar =
     document.getElementById("playerBar");
@@ -52,13 +46,11 @@ const playerBar =
 const cpuBar =
     document.getElementById("cpuBar");
 
-
 const message =
     document.getElementById("message");
 
 const resultText =
     document.getElementById("resultText");
-
 
 const restartButton =
     document.getElementById("restartButton");
@@ -69,128 +61,84 @@ const characterButton =
 const menuButton =
     document.getElementById("menuButton");
 
-
-/* ========================= */
-/* CHARACTER */
-/* ========================= */
-
 const characterPath =
     "Character/Kiryu/";
 
-
-/* ========================= */
-/* STATE */
-/* ========================= */
-
 let gameRunning = false;
-
 let gameOver = false;
-
 let roundIntro = false;
 
 let playerRounds = 0;
-
 let cpuRounds = 0;
-
 let currentRound = 1;
 
 let player;
-
 let cpu;
 
 const keys = {};
 
-
-/*
-    Current animation state.
-
-    This prevents the movement code
-    from immediately overwriting
-    punch / kick / hit / jump.
-*/
-
 let playerAction = "idle_01";
-
 let actionTimer = null;
 
 
-/* ========================= */
-/* SCREEN */
-/* ========================= */
+// ========================================
+// SCREEN
+// ========================================
 
 function showScreen(name) {
-
     Object.values(screens).forEach(screen => {
-
         screen.classList.remove("active");
-
     });
 
     screens[name].classList.add("active");
 }
 
 
-/* ========================= */
-/* SPRITE */
-/* ========================= */
+// ========================================
+// PLAYER SPRITE
+// ========================================
 
 function setPlayerSprite(action, duration = 0) {
-
     playerAction = action;
 
     playerSprite.src =
         characterPath + action + ".png";
 
-
     if (actionTimer) {
-
         clearTimeout(actionTimer);
-
     }
 
-
     if (duration > 0) {
-
         actionTimer = setTimeout(() => {
-
             if (player && player.hp > 0) {
-
                 setPlayerSprite("idle_01");
-
             }
-
         }, duration);
-
     }
 }
 
 
-/* ========================= */
-/* CHARACTER SELECT */
-/* ========================= */
+// ========================================
+// CHARACTER SELECT
+// ========================================
 
 fighterChoices.forEach(choice => {
 
     choice.addEventListener("click", () => {
 
         fighterChoices.forEach(item => {
-
             item.classList.remove("selected");
-
         });
 
-
         choice.classList.add("selected");
-
 
         const color =
             choice.dataset.color;
 
-
         if (color === "red") {
 
             selectedName.innerText =
-                "小红";
+                "桐生";
 
         } else {
 
@@ -198,103 +146,73 @@ fighterChoices.forEach(choice => {
                 color.toUpperCase();
 
         }
-
     });
 
 });
 
 
-/* ========================= */
-/* MENU */
-/* ========================= */
+// ========================================
+// MENU
+// ========================================
 
 startButton.addEventListener("click", () => {
-
     showScreen("select");
-
 });
-
 
 howToButton.addEventListener("click", () => {
-
     showScreen("howTo");
-
 });
-
 
 backButton.addEventListener("click", () => {
-
     showScreen("menu");
-
 });
-
 
 selectBackButton.addEventListener("click", () => {
-
     showScreen("menu");
-
 });
-
 
 confirmButton.addEventListener("click", () => {
 
     playerRounds = 0;
-
     cpuRounds = 0;
-
     currentRound = 1;
 
     startRound();
-
 });
 
 
-/* ========================= */
-/* KEYBOARD */
-/* ========================= */
+// ========================================
+// KEYBOARD
+// ========================================
 
 document.addEventListener("keydown", event => {
 
     const key =
         event.key.toLowerCase();
 
-
     keys[key] = true;
-
 
     if (
         !gameRunning ||
         gameOver ||
         roundIntro
     ) {
-
         return;
-
     }
-
 
     if (key === "j") {
-
         playerAttack("punch");
-
     }
-
 
     if (key === "k") {
-
         playerAttack("kick");
-
     }
 
-
     if (key === "w") {
-
         jump(player);
-
     }
 
 });
-
 
 document.addEventListener("keyup", event => {
 
@@ -303,9 +221,9 @@ document.addEventListener("keyup", event => {
 });
 
 
-/* ========================= */
-/* START ROUND */
-/* ========================= */
+// ========================================
+// START ROUND
+// ========================================
 
 function startRound() {
 
@@ -314,6 +232,10 @@ function startRound() {
         x: 150,
 
         y: 0,
+
+        // ⭐ 1 = 向右
+        // ⭐ -1 = 向左
+        facing: 1,
 
         hp: 100,
 
@@ -367,23 +289,28 @@ function startRound() {
     setPlayerSprite("idle_01");
 
 
-    playerBar.style.width = "100%";
+    playerBar.style.width =
+        "100%";
 
-    cpuBar.style.width = "100%";
+    cpuBar.style.width =
+        "100%";
 
 
-    message.style.display = "block";
+    message.style.display =
+        "block";
 
 
-    restartButton.style.display = "none";
+    restartButton.style.display =
+        "none";
 
-    characterButton.style.display = "none";
+    characterButton.style.display =
+        "none";
 
-    menuButton.style.display = "none";
+    menuButton.style.display =
+        "none";
 
 
     resultText.innerHTML =
-
         `ROUND ${currentRound}<br>
         <span style="font-family: monospace; font-size: 22px;">
         FIGHT!
@@ -396,18 +323,15 @@ function startRound() {
     setTimeout(() => {
 
         if (gameOver) {
-
             return;
-
         }
 
-
-        message.style.display = "none";
+        message.style.display =
+            "none";
 
         roundIntro = false;
 
         gameRunning = true;
-
 
         requestAnimationFrame(gameLoop);
 
@@ -416,20 +340,16 @@ function startRound() {
 }
 
 
-/* ========================= */
-/* JUMP */
-/* ========================= */
+// ========================================
+// JUMP
+// ========================================
 
 function jump(fighter) {
 
     if (
-
         fighter.y === 0 &&
-
         !fighter.attacking &&
-
         !fighter.blocking
-
     ) {
 
         fighter.velocityY =
@@ -450,15 +370,14 @@ function jump(fighter) {
 }
 
 
-/* ========================= */
-/* GRAVITY */
-/* ========================= */
+// ========================================
+// GRAVITY
+// ========================================
 
 function gravity(fighter) {
 
     fighter.y +=
         fighter.velocityY;
-
 
     fighter.velocityY -=
         0.7;
@@ -475,94 +394,109 @@ function gravity(fighter) {
 }
 
 
-/* ========================= */
-/* PLAYER MOVEMENT */
-/* ========================= */
+// ========================================
+// PLAYER MOVEMENT
+// ========================================
 
 function playerMovement() {
-
-
-    /*
-        BLOCK has highest priority.
-    */
 
     player.blocking =
         !!keys["s"] &&
         !player.attacking;
 
 
+    // -------------------------
+    // BLOCK
+    // -------------------------
+
     if (player.blocking) {
 
-        setPlayerSprite("block_01");
+        setPlayerSprite(
+            "block_01"
+        );
 
         return;
 
     }
 
 
-    /*
-        Don't overwrite attack,
-        hit or jump animations.
-    */
+    // -------------------------
+    // ATTACK
+    // -------------------------
 
     if (player.attacking) {
-
         return;
-
     }
 
 
-    if (playerAction === "hit_01") {
+    // -------------------------
+    // HIT
+    // -------------------------
 
+    if (
+        playerAction === "hit_01"
+    ) {
         return;
+    }
 
+    if (
+        playerAction === "hit_02"
+    ) {
+        return;
     }
 
 
-    if (playerAction === "hit_02") {
+    // -------------------------
+    // KO
+    // -------------------------
 
+    if (
+        playerAction === "ko"
+    ) {
         return;
-
     }
 
-
-    if (playerAction === "ko") {
-
-        return;
-
-    }
-
-
-    /*
-        MOVEMENT
-    */
 
     let moving = false;
 
+
+    // -------------------------
+    // MOVE LEFT
+    // -------------------------
 
     if (keys["a"]) {
 
         player.x -=
             player.speed;
 
+        // ⭐ 面向左
+        player.facing = -1;
+
         moving = true;
 
     }
 
+
+    // -------------------------
+    // MOVE RIGHT
+    // -------------------------
 
     if (keys["d"]) {
 
         player.x +=
             player.speed;
 
+        // ⭐ 面向右
+        player.facing = 1;
+
         moving = true;
 
     }
 
 
-    /*
-        WALK
-    */
+    // -------------------------
+    // WALK ANIMATION
+    // -------------------------
 
     if (
         moving &&
@@ -589,15 +523,14 @@ function playerMovement() {
 
         }
 
-
         return;
 
     }
 
 
-    /*
-        JUMP
-    */
+    // -------------------------
+    // JUMP
+    // -------------------------
 
     if (player.y > 0) {
 
@@ -616,9 +549,9 @@ function playerMovement() {
     }
 
 
-    /*
-        IDLE
-    */
+    // -------------------------
+    // IDLE
+    // -------------------------
 
     if (
         !moving &&
@@ -638,8 +571,11 @@ function playerMovement() {
     }
 
 
-    player.x =
+    // -------------------------
+    // LIMIT
+    // -------------------------
 
+    player.x =
         Math.max(
             0,
             Math.min(
@@ -651,24 +587,18 @@ function playerMovement() {
 }
 
 
-/* ========================= */
-/* PLAYER ATTACK */
-/* ========================= */
+// ========================================
+// PLAYER ATTACK
+// ========================================
 
 function playerAttack(type) {
 
     if (
-
         player.cooldown ||
-
         player.attacking ||
-
         player.blocking
-
     ) {
-
         return;
-
     }
 
 
@@ -711,6 +641,7 @@ function playerAttack(type) {
     }
 
 
+    // ⭐ 攻击动作也会自动镜像
     setPlayerSprite(
         animation
     );
@@ -718,15 +649,17 @@ function playerAttack(type) {
 
     if (distance <= range) {
 
-        damageCPU(damage);
+        damageCPU(
+            damage
+        );
 
     }
 
 
     setTimeout(() => {
 
-        player.attacking = false;
-
+        player.attacking =
+            false;
 
         if (player.hp > 0) {
 
@@ -741,16 +674,17 @@ function playerAttack(type) {
 
     setTimeout(() => {
 
-        player.cooldown = false;
+        player.cooldown =
+            false;
 
     }, 450);
 
 }
 
 
-/* ========================= */
-/* CPU AI */
-/* ========================= */
+// ========================================
+// CPU AI
+// ========================================
 
 function cpuAI() {
 
@@ -761,10 +695,6 @@ function cpuAI() {
     const absDistance =
         Math.abs(distance);
 
-
-    /*
-        MOVE
-    */
 
     if (absDistance > 110) {
 
@@ -783,20 +713,11 @@ function cpuAI() {
     }
 
 
-    /*
-        JUMP
-    */
-
     if (
-
         player.y > 40 &&
-
         cpu.y === 0 &&
-
         !cpu.jumpCooldown &&
-
         Math.random() < 0.04
-
     ) {
 
         cpuJump();
@@ -804,20 +725,11 @@ function cpuAI() {
     }
 
 
-    /*
-        ATTACK
-    */
-
     if (
-
         absDistance <= 115 &&
-
         !cpu.attacking &&
-
         !cpu.cooldown &&
-
         Math.random() < 0.035
-
     ) {
 
         cpuAttack();
@@ -825,21 +737,13 @@ function cpuAI() {
     }
 
 
-    /*
-        BLOCK
-    */
-
     cpu.blocking =
-
         player.attacking &&
-
         absDistance < 130 &&
-
         Math.random() < 0.25;
 
 
     cpu.x =
-
         Math.max(
             0,
             Math.min(
@@ -851,22 +755,17 @@ function cpuAI() {
 }
 
 
-/* ========================= */
-/* CPU JUMP */
-/* ========================= */
+// ========================================
+// CPU JUMP
+// ========================================
 
 function cpuJump() {
 
     if (
-
         cpu.y !== 0 ||
-
         cpu.jumpCooldown
-
     ) {
-
         return;
-
     }
 
 
@@ -888,9 +787,9 @@ function cpuJump() {
 }
 
 
-/* ========================= */
-/* CPU ATTACK */
-/* ========================= */
+// ========================================
+// CPU ATTACK
+// ========================================
 
 function cpuAttack() {
 
@@ -921,7 +820,9 @@ function cpuAttack() {
 
         damagePlayer(
             damage,
-            kick ? "kick" : "punch"
+            kick
+                ? "kick"
+                : "punch"
         );
 
     }
@@ -929,53 +830,46 @@ function cpuAttack() {
 
     setTimeout(() => {
 
-        cpu.attacking = false;
+        cpu.attacking =
+            false;
 
     }, 250);
 
 
     setTimeout(() => {
 
-        cpu.cooldown = false;
+        cpu.cooldown =
+            false;
 
     }, 650);
 
 }
 
 
-/* ========================= */
-/* DAMAGE PLAYER */
-/* ========================= */
+// ========================================
+// DAMAGE PLAYER
+// ========================================
 
-function damagePlayer(amount, type) {
+function damagePlayer(
+    amount,
+    type
+) {
 
     if (player.hp <= 0) {
-
         return;
-
     }
 
-
-    /*
-        BLOCK
-    */
 
     if (player.blocking) {
 
         amount *= 0.3;
 
+
         setPlayerSprite(
             "block_01"
         );
 
-    }
-
-
-    /*
-        HIT
-    */
-
-    else {
+    } else {
 
         if (type === "kick") {
 
@@ -995,7 +889,6 @@ function damagePlayer(amount, type) {
 
 
     player.hp =
-
         Math.max(
             0,
             player.hp - amount
@@ -1024,9 +917,9 @@ function damagePlayer(amount, type) {
 }
 
 
-/* ========================= */
-/* DAMAGE CPU */
-/* ========================= */
+// ========================================
+// DAMAGE CPU
+// ========================================
 
 function damageCPU(amount) {
 
@@ -1038,7 +931,6 @@ function damageCPU(amount) {
 
 
     cpu.hp =
-
         Math.max(
             0,
             cpu.hp - amount
@@ -1047,15 +939,14 @@ function damageCPU(amount) {
 }
 
 
-/* ========================= */
-/* HEALTH */
-/* ========================= */
+// ========================================
+// HEALTH
+// ========================================
 
 function updateHealth() {
 
     playerBar.style.width =
         player.hp + "%";
-
 
     cpuBar.style.width =
         cpu.hp + "%";
@@ -1063,9 +954,9 @@ function updateHealth() {
 }
 
 
-/* ========================= */
-/* WINNER */
-/* ========================= */
+// ========================================
+// WINNER
+// ========================================
 
 function checkWinner() {
 
@@ -1092,9 +983,9 @@ function checkWinner() {
 }
 
 
-/* ========================= */
-/* ROUND FINISH */
-/* ========================= */
+// ========================================
+// ROUND END
+// ========================================
 
 function finishRound(winner) {
 
@@ -1107,29 +998,23 @@ function finishRound(winner) {
 
         setPlayerSprite("ko");
 
-
         cpuRounds++;
 
 
         if (cpuRounds >= 2) {
 
             endGame(
-
                 `Oops...<br>
                 You totally did that on purpose!<br><br>
                 Don't worry,<br>
                 you're still the best! ♡`
-
             );
 
             return;
 
         }
 
-    }
-
-
-    else {
+    } else {
 
         playerRounds++;
 
@@ -1137,10 +1022,8 @@ function finishRound(winner) {
         if (playerRounds >= 2) {
 
             endGame(
-
                 `Yeahhh! You are the winner!<br>
                 Happy birthday to you! ♡`
-
             );
 
             return;
@@ -1151,13 +1034,11 @@ function finishRound(winner) {
 
 
     resultText.innerHTML =
-
         `${
             winner === "PLAYER"
                 ? "PLAYER WINS!"
                 : "CPU WINS!"
         }<br>
-
         <span style="font-family: monospace; font-size: 20px;">
         ${playerRounds} - ${cpuRounds}
         </span>`;
@@ -1188,9 +1069,9 @@ function finishRound(winner) {
 }
 
 
-/* ========================= */
-/* FINAL GAME END */
-/* ========================= */
+// ========================================
+// FINAL GAME END
+// ========================================
 
 function endGame(text) {
 
@@ -1221,9 +1102,9 @@ function endGame(text) {
 }
 
 
-/* ========================= */
-/* DRAW */
-/* ========================= */
+// ========================================
+// DRAW
+// ========================================
 
 function draw() {
 
@@ -1243,6 +1124,23 @@ function draw() {
         (8 + cpu.y) + "px";
 
 
+    // ====================================
+    // ⭐ PLAYER DIRECTION / MIRROR
+    // ====================================
+
+    if (player.facing === -1) {
+
+        playerSprite.style.transform =
+            "scaleX(-1)";
+
+    } else {
+
+        playerSprite.style.transform =
+            "scaleX(1)";
+
+    }
+
+
     playerEl.classList.toggle(
         "blocking",
         player.blocking
@@ -1251,36 +1149,29 @@ function draw() {
 }
 
 
-/* ========================= */
-/* GAME LOOP */
-/* ========================= */
+// ========================================
+// GAME LOOP
+// ========================================
 
 function gameLoop() {
 
     if (!gameRunning) {
-
         return;
-
     }
 
 
     if (checkWinner()) {
-
         return;
-
     }
 
 
     playerMovement();
 
-
     gravity(player);
 
     gravity(cpu);
 
-
     cpuAI();
-
 
     draw();
 
@@ -1294,9 +1185,9 @@ function gameLoop() {
 }
 
 
-/* ========================= */
-/* END BUTTONS */
-/* ========================= */
+// ========================================
+// RESTART
+// ========================================
 
 restartButton.addEventListener(
     "click",
@@ -1313,6 +1204,10 @@ restartButton.addEventListener(
     }
 );
 
+
+// ========================================
+// CHARACTER SELECT
+// ========================================
 
 characterButton.addEventListener(
     "click",
@@ -1333,6 +1228,10 @@ characterButton.addEventListener(
     }
 );
 
+
+// ========================================
+// MAIN MENU
+// ========================================
 
 menuButton.addEventListener(
     "click",
