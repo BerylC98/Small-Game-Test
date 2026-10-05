@@ -1,72 +1,105 @@
 // ========================================
-// PIXEL FIGHTER
+// YEYMAR FIGHTER
 // Character System
 // ========================================
 
 
 // ========================================
-// SCREENS
+// SCREEN ELEMENTS
 // ========================================
 
 const screens = {
-    menu: document.getElementById("menuScreen"),
-    howTo: document.getElementById("howToScreen"),
-    select: document.getElementById("selectScreen"),
-    fight: document.getElementById("fightScreen")
+
+    menu:
+        document.getElementById("menuScreen"),
+
+    howTo:
+        document.getElementById("howToScreen"),
+
+    select:
+        document.getElementById("selectScreen"),
+
+    fight:
+        document.getElementById("fightScreen")
+
 };
 
-
-// ========================================
-// UI ELEMENTS
-// ========================================
 
 const startButton =
     document.getElementById("startButton");
 
+
 const howToButton =
     document.getElementById("howToButton");
+
 
 const backButton =
     document.getElementById("backButton");
 
+
 const selectBackButton =
     document.getElementById("selectBackButton");
+
 
 const confirmButton =
     document.getElementById("confirmButton");
 
+
 const fighterChoices =
     document.querySelectorAll(".fighter-choice");
+
 
 const selectedName =
     document.getElementById("selectedName");
 
+
+const playerName =
+    document.getElementById("playerName");
+
+
+const cpuName =
+    document.getElementById("cpuName");
+
+
 const playerEl =
     document.getElementById("player");
+
 
 const playerSprite =
     document.getElementById("playerSprite");
 
+
 const cpuEl =
     document.getElementById("cpu");
+
+
+const cpuSprite =
+    document.getElementById("cpuSprite");
+
 
 const playerBar =
     document.getElementById("playerBar");
 
+
 const cpuBar =
     document.getElementById("cpuBar");
+
 
 const message =
     document.getElementById("message");
 
+
 const resultText =
     document.getElementById("resultText");
+
 
 const restartButton =
     document.getElementById("restartButton");
 
+
 const characterButton =
     document.getElementById("characterButton");
+
 
 const menuButton =
     document.getElementById("menuButton");
@@ -78,14 +111,14 @@ const menuButton =
 
 const characters = {
 
+    Cat: {
+        name: "小猫",
+        folder: "Cat"
+    },
+
     Kiryu: {
         name: "桐生",
         folder: "Kiryu"
-    },
-
-    Zhaoyun: {
-        name: "赵云",
-        folder: "Zhaoyun"
     },
 
     Kugga: {
@@ -93,9 +126,9 @@ const characters = {
         folder: "Kugga"
     },
 
-    Cat: {
-        name: "小猫",
-        folder: "Cat"
+    Zhaoyun: {
+        name: "赵云",
+        folder: "Zhaoyun"
     }
 
 };
@@ -106,7 +139,15 @@ const characters = {
 // ========================================
 
 let selectedCharacter =
-    "Kiryu";
+    "Cat";
+
+
+let playerCharacter =
+    characters.Cat;
+
+
+let cpuCharacter =
+    characters.Kiryu;
 
 
 // ========================================
@@ -119,33 +160,47 @@ let gameOver = false;
 
 let roundIntro = false;
 
+
 let playerRounds = 0;
 
 let cpuRounds = 0;
 
 let currentRound = 1;
 
+
 let player;
 
 let cpu;
 
+
 const keys = {};
+
 
 let playerAction =
     "idle_01";
 
-let actionTimer = null;
+
+let cpuAction =
+    "idle_01";
+
+
+let playerActionTimer =
+    null;
+
+
+let cpuActionTimer =
+    null;
 
 
 // ========================================
 // CHARACTER PATH
 // ========================================
 
-function getCharacterPath() {
+function getCharacterPath(character) {
 
     return (
         "Character/" +
-        characters[selectedCharacter].folder +
+        character.folder +
         "/"
     );
 
@@ -158,19 +213,26 @@ function getCharacterPath() {
 
 function showScreen(name) {
 
-    Object.values(screens).forEach(screen => {
+    Object.values(screens).forEach(
+        screen => {
 
-        screen.classList.remove("active");
+            screen.classList.remove(
+                "active"
+            );
 
-    });
+        }
+    );
 
-    screens[name].classList.add("active");
+
+    screens[name].classList.add(
+        "active"
+    );
 
 }
 
 
 // ========================================
-// SET PLAYER SPRITE
+// PLAYER SPRITE
 // ========================================
 
 function setPlayerSprite(
@@ -178,19 +240,33 @@ function setPlayerSprite(
     duration = 0
 ) {
 
-    playerAction =
-        action;
+    playerAction = action;
 
-    playerSprite.src =
-        getCharacterPath() +
+
+    const newSrc =
+        getCharacterPath(
+            playerCharacter
+        ) +
         action +
         ".png";
 
 
-    if (actionTimer) {
+    if (
+        playerSprite.src.indexOf(
+            newSrc
+        ) === -1
+    ) {
+
+        playerSprite.src =
+            newSrc;
+
+    }
+
+
+    if (playerActionTimer) {
 
         clearTimeout(
-            actionTimer
+            playerActionTimer
         );
 
     }
@@ -198,7 +274,7 @@ function setPlayerSprite(
 
     if (duration > 0) {
 
-        actionTimer =
+        playerActionTimer =
             setTimeout(() => {
 
                 if (
@@ -220,79 +296,149 @@ function setPlayerSprite(
 
 
 // ========================================
+// CPU SPRITE
+// ========================================
+
+function setCPUSprite(
+    action,
+    duration = 0
+) {
+
+    cpuAction = action;
+
+
+    const newSrc =
+        getCharacterPath(
+            cpuCharacter
+        ) +
+        action +
+        ".png";
+
+
+    if (
+        cpuSprite.src.indexOf(
+            newSrc
+        ) === -1
+    ) {
+
+        cpuSprite.src =
+            newSrc;
+
+    }
+
+
+    if (cpuActionTimer) {
+
+        clearTimeout(
+            cpuActionTimer
+        );
+
+    }
+
+
+    if (duration > 0) {
+
+        cpuActionTimer =
+            setTimeout(() => {
+
+                if (
+                    cpu &&
+                    cpu.hp > 0
+                ) {
+
+                    setCPUSprite(
+                        "idle_01"
+                    );
+
+                }
+
+            }, duration);
+
+    }
+
+}
+
+
+// ========================================
 // CHARACTER SELECT
 // ========================================
 
-fighterChoices.forEach(choice => {
+fighterChoices.forEach(
+    choice => {
 
-    choice.addEventListener(
-        "click",
-        () => {
+        choice.addEventListener(
+            "click",
+            () => {
 
-            fighterChoices.forEach(item => {
+                fighterChoices.forEach(
+                    item => {
 
-                item.classList.remove(
+                        item.classList.remove(
+                            "selected"
+                        );
+
+                    }
+                );
+
+
+                choice.classList.add(
                     "selected"
                 );
 
-            });
+
+                selectedCharacter =
+                    choice.dataset.character;
 
 
-            choice.classList.add(
-                "selected"
-            );
+                selectedName.innerText =
+                    characters[
+                        selectedCharacter
+                    ].name;
 
+            }
+        );
 
-            selectedCharacter =
-                choice.dataset.character;
-
-
-            selectedName.innerText =
-                characters[
-                    selectedCharacter
-                ].name;
-
-        }
-    );
-
-});
+    }
+);
 
 
 // ========================================
-// START MENU
+// START BUTTON
 // ========================================
 
 startButton.addEventListener(
     "click",
     () => {
 
-        showScreen(
-            "select"
-        );
+        showScreen("select");
 
     }
 );
 
+
+// ========================================
+// HOW TO PLAY
+// ========================================
 
 howToButton.addEventListener(
     "click",
     () => {
 
-        showScreen(
-            "howTo"
-        );
+        showScreen("howTo");
 
     }
 );
 
 
+// ========================================
+// BACK
+// ========================================
+
 backButton.addEventListener(
     "click",
     () => {
 
-        showScreen(
-            "menu"
-        );
+        showScreen("menu");
 
     }
 );
@@ -302,9 +448,7 @@ selectBackButton.addEventListener(
     "click",
     () => {
 
-        showScreen(
-            "menu"
-        );
+        showScreen("menu");
 
     }
 );
@@ -318,11 +462,50 @@ confirmButton.addEventListener(
     "click",
     () => {
 
+        playerCharacter =
+            characters[
+                selectedCharacter
+            ];
+
+
+        // ====================================
+        // CPU RANDOM CHARACTER
+        // ====================================
+
+        const availableCharacters =
+            Object.keys(characters)
+                .filter(
+                    key =>
+                        key !==
+                        selectedCharacter
+                );
+
+
+        const randomIndex =
+            Math.floor(
+                Math.random() *
+                availableCharacters.length
+            );
+
+
+        const cpuKey =
+            availableCharacters[
+                randomIndex
+            ];
+
+
+        cpuCharacter =
+            characters[
+                cpuKey
+            ];
+
+
         playerRounds = 0;
 
         cpuRounds = 0;
 
         currentRound = 1;
+
 
         startRound();
 
@@ -433,6 +616,8 @@ function startRound() {
 
         y: 0,
 
+        facing: -1,
+
         hp: 100,
 
         speed: 2.2,
@@ -459,14 +644,35 @@ function startRound() {
     roundIntro = true;
 
 
-    // Load selected character idle
+    // ====================================
+    // UPDATE NAMES
+    // ====================================
+
+    playerName.innerText =
+        playerCharacter.name;
+
+
+    cpuName.innerText =
+        cpuCharacter.name;
+
+
+    // ====================================
+    // LOAD INITIAL SPRITES
+    // ====================================
+
     setPlayerSprite(
+        "idle_01"
+    );
+
+
+    setCPUSprite(
         "idle_01"
     );
 
 
     playerBar.style.width =
         "100%";
+
 
     cpuBar.style.width =
         "100%";
@@ -479,8 +685,10 @@ function startRound() {
     restartButton.style.display =
         "none";
 
+
     characterButton.style.display =
         "none";
+
 
     menuButton.style.display =
         "none";
@@ -492,37 +700,39 @@ function startRound() {
             font-family: monospace;
             font-size: 22px;
         ">
-            FIGHT!
+        FIGHT!
         </span>`;
 
 
-    showScreen(
-        "fight"
+    showScreen("fight");
+
+
+    setTimeout(
+        () => {
+
+            if (gameOver) {
+
+                return;
+
+            }
+
+
+            message.style.display =
+                "none";
+
+
+            roundIntro = false;
+
+            gameRunning = true;
+
+
+            requestAnimationFrame(
+                gameLoop
+            );
+
+        },
+        1300
     );
-
-
-    setTimeout(() => {
-
-        if (gameOver) {
-
-            return;
-
-        }
-
-
-        message.style.display =
-            "none";
-
-        roundIntro = false;
-
-        gameRunning = true;
-
-
-        requestAnimationFrame(
-            gameLoop
-        );
-
-    }, 1300);
 
 }
 
@@ -543,13 +753,16 @@ function jump(fighter) {
             fighter.jumpSpeed;
 
 
-        if (
-            fighter === player
-        ) {
+        if (fighter === player) {
 
             setPlayerSprite(
-                "jump_01",
-                600
+                "jump_01"
+            );
+
+        } else {
+
+            setCPUSprite(
+                "jump_01"
             );
 
         }
@@ -567,6 +780,7 @@ function gravity(fighter) {
 
     fighter.y +=
         fighter.velocityY;
+
 
     fighter.velocityY -=
         0.7;
@@ -594,13 +808,11 @@ function playerMovement() {
         !player.attacking;
 
 
-    // -------------------------
+    // ====================================
     // BLOCK
-    // -------------------------
+    // ====================================
 
-    if (
-        player.blocking
-    ) {
+    if (player.blocking) {
 
         setPlayerSprite(
             "block_01"
@@ -611,26 +823,24 @@ function playerMovement() {
     }
 
 
-    // -------------------------
+    // ====================================
     // ATTACK
-    // -------------------------
+    // ====================================
 
-    if (
-        player.attacking
-    ) {
+    if (player.attacking) {
 
         return;
 
     }
 
 
-    // -------------------------
+    // ====================================
     // HIT
-    // -------------------------
+    // ====================================
 
     if (
-        playerAction ===
-        "hit_01"
+        playerAction === "hit_01" ||
+        playerAction === "hit_02"
     ) {
 
         return;
@@ -638,23 +848,12 @@ function playerMovement() {
     }
 
 
-    if (
-        playerAction ===
-        "hit_02"
-    ) {
-
-        return;
-
-    }
-
-
-    // -------------------------
+    // ====================================
     // KO
-    // -------------------------
+    // ====================================
 
     if (
-        playerAction ===
-        "ko"
+        playerAction === "ko"
     ) {
 
         return;
@@ -665,43 +864,41 @@ function playerMovement() {
     let moving = false;
 
 
-    // -------------------------
+    // ====================================
     // LEFT
-    // -------------------------
+    // ====================================
 
     if (keys["a"]) {
 
         player.x -=
             player.speed;
 
-        player.facing =
-            -1;
+        player.facing = -1;
 
         moving = true;
 
     }
 
 
-    // -------------------------
+    // ====================================
     // RIGHT
-    // -------------------------
+    // ====================================
 
     if (keys["d"]) {
 
         player.x +=
             player.speed;
 
-        player.facing =
-            1;
+        player.facing = 1;
 
         moving = true;
 
     }
 
 
-    // -------------------------
+    // ====================================
     // WALK
-    // -------------------------
+    // ====================================
 
     if (
         moving &&
@@ -734,13 +931,11 @@ function playerMovement() {
     }
 
 
-    // -------------------------
+    // ====================================
     // JUMP
-    // -------------------------
+    // ====================================
 
-    if (
-        player.y > 0
-    ) {
+    if (player.y > 0) {
 
         if (
             playerAction !==
@@ -753,14 +948,15 @@ function playerMovement() {
 
         }
 
+
         return;
 
     }
 
 
-    // -------------------------
+    // ====================================
     // IDLE
-    // -------------------------
+    // ====================================
 
     if (
         !moving &&
@@ -781,15 +977,15 @@ function playerMovement() {
     }
 
 
-    // -------------------------
+    // ====================================
     // LIMIT
-    // -------------------------
+    // ====================================
 
     player.x =
         Math.max(
             0,
             Math.min(
-                780,
+                775,
                 player.x
             )
         );
@@ -814,11 +1010,9 @@ function playerAttack(type) {
     }
 
 
-    player.attacking =
-        true;
+    player.attacking = true;
 
-    player.cooldown =
-        true;
+    player.cooldown = true;
 
 
     const distance =
@@ -835,9 +1029,7 @@ function playerAttack(type) {
     let animation;
 
 
-    if (
-        type === "punch"
-    ) {
+    if (type === "punch") {
 
         damage = 8;
 
@@ -921,13 +1113,33 @@ function cpuAI() {
 
 
     const absDistance =
-        Math.abs(
-            distance
-        );
+        Math.abs(distance);
 
+
+    // ====================================
+    // FACE PLAYER
+    // ====================================
 
     if (
-        absDistance > 110
+        distance > 0
+    ) {
+
+        cpu.facing = 1;
+
+    } else {
+
+        cpu.facing = -1;
+
+    }
+
+
+    // ====================================
+    // APPROACH
+    // ====================================
+
+    if (
+        absDistance > 110 &&
+        !cpu.attacking
     ) {
 
         if (
@@ -947,6 +1159,10 @@ function cpuAI() {
     }
 
 
+    // ====================================
+    // JUMP
+    // ====================================
+
     if (
         player.y > 40 &&
         cpu.y === 0 &&
@@ -958,6 +1174,10 @@ function cpuAI() {
 
     }
 
+
+    // ====================================
+    // ATTACK
+    // ====================================
 
     if (
         absDistance <= 115 &&
@@ -971,17 +1191,34 @@ function cpuAI() {
     }
 
 
+    // ====================================
+    // BLOCK
+    // ====================================
+
     cpu.blocking =
         player.attacking &&
         absDistance < 130 &&
         Math.random() < 0.25;
 
 
+    if (cpu.blocking) {
+
+        setCPUSprite(
+            "block_01"
+        );
+
+    }
+
+
+    // ====================================
+    // LIMIT
+    // ====================================
+
     cpu.x =
         Math.max(
             0,
             Math.min(
-                840,
+                775,
                 cpu.x
             )
         );
@@ -1013,6 +1250,11 @@ function cpuJump() {
         true;
 
 
+    setCPUSprite(
+        "jump_01"
+    );
+
+
     setTimeout(
         () => {
 
@@ -1032,11 +1274,9 @@ function cpuJump() {
 
 function cpuAttack() {
 
-    cpu.attacking =
-        true;
+    cpu.attacking = true;
 
-    cpu.cooldown =
-        true;
+    cpu.cooldown = true;
 
 
     const distance =
@@ -1062,6 +1302,13 @@ function cpuAttack() {
             : 90;
 
 
+    setCPUSprite(
+        kick
+            ? "kick_01"
+            : "punch_01"
+    );
+
+
     if (
         distance <= range
     ) {
@@ -1081,6 +1328,18 @@ function cpuAttack() {
 
             cpu.attacking =
                 false;
+
+
+            if (
+                cpu.hp > 0 &&
+                !cpu.blocking
+            ) {
+
+                setCPUSprite(
+                    "idle_01"
+                );
+
+            }
 
         },
         250
@@ -1198,6 +1457,40 @@ function damageCPU(
 
         amount *= 0.3;
 
+
+        setCPUSprite(
+            "block_01"
+        );
+
+    } else {
+
+        // CPU receives hit
+
+        setCPUSprite(
+            amount >= 10
+                ? "hit_02"
+                : "hit_01"
+        );
+
+
+        setTimeout(
+            () => {
+
+                if (
+                    cpu.hp > 0 &&
+                    !cpu.blocking
+                ) {
+
+                    setCPUSprite(
+                        "idle_01"
+                    );
+
+                }
+
+            },
+            350
+        );
+
     }
 
 
@@ -1219,6 +1512,7 @@ function updateHealth() {
     playerBar.style.width =
         player.hp + "%";
 
+
     cpuBar.style.width =
         cpu.hp + "%";
 
@@ -1226,7 +1520,7 @@ function updateHealth() {
 
 
 // ========================================
-// CHECK WINNER
+// WINNER CHECK
 // ========================================
 
 function checkWinner() {
@@ -1263,18 +1557,16 @@ function checkWinner() {
 
 
 // ========================================
-// FINISH ROUND
+// ROUND END
 // ========================================
 
 function finishRound(
     winner
 ) {
 
-    gameRunning =
-        false;
+    gameRunning = false;
 
-    roundIntro =
-        true;
+    roundIntro = true;
 
 
     if (
@@ -1300,11 +1592,17 @@ function finishRound(
                 you're still the best! ♡`
             );
 
+
             return;
 
         }
 
     } else {
+
+        setCPUSprite(
+            "ko"
+        );
+
 
         playerRounds++;
 
@@ -1317,6 +1615,7 @@ function finishRound(
                 `Yeahhh! You are the winner!<br>
                 Happy birthday to you! ♡`
             );
+
 
             return;
 
@@ -1335,8 +1634,7 @@ function finishRound(
             font-family: monospace;
             font-size: 20px;
         ">
-            ${playerRounds} -
-            ${cpuRounds}
+        ${playerRounds} - ${cpuRounds}
         </span>`;
 
 
@@ -1347,8 +1645,10 @@ function finishRound(
     restartButton.style.display =
         "none";
 
+
     characterButton.style.display =
         "none";
+
 
     menuButton.style.display =
         "none";
@@ -1369,19 +1669,16 @@ function finishRound(
 
 
 // ========================================
-// END GAME
+// FINAL GAME END
 // ========================================
 
 function endGame(text) {
 
-    gameOver =
-        true;
+    gameOver = true;
 
-    gameRunning =
-        false;
+    gameRunning = false;
 
-    roundIntro =
-        false;
+    roundIntro = false;
 
 
     resultText.innerHTML =
@@ -1395,8 +1692,10 @@ function endGame(text) {
     restartButton.style.display =
         "block";
 
+
     characterButton.style.display =
         "block";
+
 
     menuButton.style.display =
         "block";
@@ -1410,26 +1709,32 @@ function endGame(text) {
 
 function draw() {
 
+    // ====================================
+    // PLAYER POSITION
+    // ====================================
+
     playerEl.style.left =
         player.x + "px";
 
 
     playerEl.style.bottom =
-        (8 + player.y) +
-        "px";
+        (8 + player.y) + "px";
 
+
+    // ====================================
+    // CPU POSITION
+    // ====================================
 
     cpuEl.style.left =
         cpu.x + "px";
 
 
     cpuEl.style.bottom =
-        (8 + cpu.y) +
-        "px";
+        (8 + cpu.y) + "px";
 
 
     // ====================================
-    // CHARACTER MIRROR
+    // PLAYER MIRROR
     // ====================================
 
     if (
@@ -1447,9 +1752,38 @@ function draw() {
     }
 
 
+    // ====================================
+    // CPU MIRROR
+    // ====================================
+
+    if (
+        cpu.facing === -1
+    ) {
+
+        cpuSprite.style.transform =
+            "scaleX(-1)";
+
+    } else {
+
+        cpuSprite.style.transform =
+            "scaleX(1)";
+
+    }
+
+
+    // ====================================
+    // BLOCKING VISUAL
+    // ====================================
+
     playerEl.classList.toggle(
         "blocking",
         player.blocking
+    );
+
+
+    cpuEl.classList.toggle(
+        "blocking",
+        cpu.blocking
     );
 
 }
@@ -1481,13 +1815,18 @@ function gameLoop() {
 
     playerMovement();
 
+
     gravity(player);
+
 
     gravity(cpu);
 
+
     cpuAI();
 
+
     draw();
+
 
     updateHealth();
 
@@ -1513,6 +1852,7 @@ restartButton.addEventListener(
 
         currentRound = 1;
 
+
         startRound();
 
     }
@@ -1527,11 +1867,9 @@ characterButton.addEventListener(
     "click",
     () => {
 
-        gameRunning =
-            false;
+        gameRunning = false;
 
-        gameOver =
-            true;
+        gameOver = true;
 
 
         playerRounds = 0;
@@ -1557,11 +1895,9 @@ menuButton.addEventListener(
     "click",
     () => {
 
-        gameRunning =
-            false;
+        gameRunning = false;
 
-        gameOver =
-            true;
+        gameOver = true;
 
 
         playerRounds = 0;
