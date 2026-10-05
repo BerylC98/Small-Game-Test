@@ -9,7 +9,7 @@ const screens = {
     select: document.getElementById("selectScreen"),
     fight: document.getElementById("fightScreen")
 };
-
+ 
 const startButton = document.getElementById("startButton");
 const howToButton = document.getElementById("howToButton");
 const backButton = document.getElementById("backButton");
