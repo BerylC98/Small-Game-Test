@@ -1,34 +1,16 @@
 // ========================================
 // PIXEL FIGHTER
-// Kiryu / 小红 version
-// Best of 3
+// Kiryu / 小红
 // ========================================
 
-
-// ========================================
-// SCREENS
-// ========================================
 
 const screens = {
-
-    menu:
-        document.getElementById("menuScreen"),
-
-    howTo:
-        document.getElementById("howToScreen"),
-
-    select:
-        document.getElementById("selectScreen"),
-
-    fight:
-        document.getElementById("fightScreen")
-
+    menu: document.getElementById("menuScreen"),
+    howTo: document.getElementById("howToScreen"),
+    select: document.getElementById("selectScreen"),
+    fight: document.getElementById("fightScreen")
 };
 
-
-// ========================================
-// BUTTONS
-// ========================================
 
 const startButton =
     document.getElementById("startButton");
@@ -45,16 +27,13 @@ const selectBackButton =
 const confirmButton =
     document.getElementById("confirmButton");
 
+
 const fighterChoices =
     document.querySelectorAll(".fighter-choice");
 
 const selectedName =
     document.getElementById("selectedName");
 
-
-// ========================================
-// PLAYER
-// ========================================
 
 const playerEl =
     document.getElementById("player");
@@ -63,17 +42,9 @@ const playerSprite =
     document.getElementById("playerSprite");
 
 
-// ========================================
-// CPU
-// ========================================
-
 const cpuEl =
     document.getElementById("cpu");
 
-
-// ========================================
-// HEALTH
-// ========================================
 
 const playerBar =
     document.getElementById("playerBar");
@@ -82,15 +53,12 @@ const cpuBar =
     document.getElementById("cpuBar");
 
 
-// ========================================
-// MESSAGE
-// ========================================
-
 const message =
     document.getElementById("message");
 
 const resultText =
     document.getElementById("resultText");
+
 
 const restartButton =
     document.getElementById("restartButton");
@@ -102,19 +70,17 @@ const menuButton =
     document.getElementById("menuButton");
 
 
-// ========================================
-// CHARACTER
-// ========================================
+/* ========================= */
+/* CHARACTER */
+/* ========================= */
 
 const characterPath =
     "Character/Kiryu/";
 
 
-// ========================================
-// GAME STATE
-// ========================================
-
-let selectedColor = "red";
+/* ========================= */
+/* STATE */
+/* ========================= */
 
 let gameRunning = false;
 
@@ -135,9 +101,22 @@ let cpu;
 const keys = {};
 
 
-// ========================================
-// SCREEN
-// ========================================
+/*
+    Current animation state.
+
+    This prevents the movement code
+    from immediately overwriting
+    punch / kick / hit / jump.
+*/
+
+let playerAction = "idle_01";
+
+let actionTimer = null;
+
+
+/* ========================= */
+/* SCREEN */
+/* ========================= */
 
 function showScreen(name) {
 
@@ -151,20 +130,44 @@ function showScreen(name) {
 }
 
 
-// ========================================
-// PLAYER SPRITE
-// ========================================
+/* ========================= */
+/* SPRITE */
+/* ========================= */
 
-function setPlayerSprite(action) {
+function setPlayerSprite(action, duration = 0) {
+
+    playerAction = action;
 
     playerSprite.src =
         characterPath + action + ".png";
+
+
+    if (actionTimer) {
+
+        clearTimeout(actionTimer);
+
+    }
+
+
+    if (duration > 0) {
+
+        actionTimer = setTimeout(() => {
+
+            if (player && player.hp > 0) {
+
+                setPlayerSprite("idle_01");
+
+            }
+
+        }, duration);
+
+    }
 }
 
 
-// ========================================
-// CHARACTER SELECT
-// ========================================
+/* ========================= */
+/* CHARACTER SELECT */
+/* ========================= */
 
 fighterChoices.forEach(choice => {
 
@@ -176,12 +179,15 @@ fighterChoices.forEach(choice => {
 
         });
 
+
         choice.classList.add("selected");
 
-        selectedColor =
+
+        const color =
             choice.dataset.color;
 
-        if (selectedColor === "red") {
+
+        if (color === "red") {
 
             selectedName.innerText =
                 "小红";
@@ -189,7 +195,7 @@ fighterChoices.forEach(choice => {
         } else {
 
             selectedName.innerText =
-                selectedColor.toUpperCase();
+                color.toUpperCase();
 
         }
 
@@ -198,9 +204,9 @@ fighterChoices.forEach(choice => {
 });
 
 
-// ========================================
-// MENU
-// ========================================
+/* ========================= */
+/* MENU */
+/* ========================= */
 
 startButton.addEventListener("click", () => {
 
@@ -243,14 +249,15 @@ confirmButton.addEventListener("click", () => {
 });
 
 
-// ========================================
-// KEYBOARD
-// ========================================
+/* ========================= */
+/* KEYBOARD */
+/* ========================= */
 
 document.addEventListener("keydown", event => {
 
     const key =
         event.key.toLowerCase();
+
 
     keys[key] = true;
 
@@ -296,9 +303,9 @@ document.addEventListener("keyup", event => {
 });
 
 
-// ========================================
-// START ROUND
-// ========================================
+/* ========================= */
+/* START ROUND */
+/* ========================= */
 
 function startRound() {
 
@@ -360,25 +367,19 @@ function startRound() {
     setPlayerSprite("idle_01");
 
 
-    playerBar.style.width =
-        "100%";
+    playerBar.style.width = "100%";
 
-    cpuBar.style.width =
-        "100%";
+    cpuBar.style.width = "100%";
 
 
-    message.style.display =
-        "block";
+    message.style.display = "block";
 
 
-    restartButton.style.display =
-        "none";
+    restartButton.style.display = "none";
 
-    characterButton.style.display =
-        "none";
+    characterButton.style.display = "none";
 
-    menuButton.style.display =
-        "none";
+    menuButton.style.display = "none";
 
 
     resultText.innerHTML =
@@ -401,9 +402,7 @@ function startRound() {
         }
 
 
-        message.style.display =
-            "none";
-
+        message.style.display = "none";
 
         roundIntro = false;
 
@@ -412,15 +411,14 @@ function startRound() {
 
         requestAnimationFrame(gameLoop);
 
-
     }, 1300);
 
 }
 
 
-// ========================================
-// JUMP
-// ========================================
+/* ========================= */
+/* JUMP */
+/* ========================= */
 
 function jump(fighter) {
 
@@ -428,7 +426,9 @@ function jump(fighter) {
 
         fighter.y === 0 &&
 
-        !fighter.attacking
+        !fighter.attacking &&
+
+        !fighter.blocking
 
     ) {
 
@@ -439,7 +439,8 @@ function jump(fighter) {
         if (fighter === player) {
 
             setPlayerSprite(
-                "jump_01"
+                "jump_01",
+                600
             );
 
         }
@@ -449,9 +450,9 @@ function jump(fighter) {
 }
 
 
-// ========================================
-// GRAVITY
-// ========================================
+/* ========================= */
+/* GRAVITY */
+/* ========================= */
 
 function gravity(fighter) {
 
@@ -474,91 +475,107 @@ function gravity(fighter) {
 }
 
 
-// ========================================
-// PLAYER MOVEMENT
-// ========================================
+/* ========================= */
+/* PLAYER MOVEMENT */
+/* ========================= */
 
 function playerMovement() {
 
 
-    // MOVE LEFT
+    /*
+        BLOCK has highest priority.
+    */
+
+    player.blocking =
+        !!keys["s"] &&
+        !player.attacking;
+
+
+    if (player.blocking) {
+
+        setPlayerSprite("block_01");
+
+        return;
+
+    }
+
+
+    /*
+        Don't overwrite attack,
+        hit or jump animations.
+    */
+
+    if (player.attacking) {
+
+        return;
+
+    }
+
+
+    if (playerAction === "hit_01") {
+
+        return;
+
+    }
+
+
+    if (playerAction === "hit_02") {
+
+        return;
+
+    }
+
+
+    if (playerAction === "ko") {
+
+        return;
+
+    }
+
+
+    /*
+        MOVEMENT
+    */
+
+    let moving = false;
+
 
     if (keys["a"]) {
 
         player.x -=
             player.speed;
 
+        moving = true;
+
     }
 
-
-    // MOVE RIGHT
 
     if (keys["d"]) {
 
         player.x +=
             player.speed;
 
-    }
-
-
-    // BLOCK
-
-    player.blocking =
-
-        !!keys["s"] &&
-
-        !player.attacking;
-
-
-    if (player.blocking) {
-
-        setPlayerSprite(
-            "block_01"
-        );
+        moving = true;
 
     }
 
 
-    // IDLE
+    /*
+        WALK
+    */
 
-    else if (
-
-        !player.attacking &&
-
-        player.y === 0 &&
-
-        !keys["a"] &&
-
-        !keys["d"]
-
+    if (
+        moving &&
+        player.y === 0
     ) {
 
-        setPlayerSprite(
-            "idle_01"
-        );
-
-    }
-
-
-    // WALK
-
-    else if (
-
-        !player.attacking &&
-
-        player.y === 0 &&
-
-        (keys["a"] || keys["d"])
-
-    ) {
-
-        const walkingFrame =
+        const frame =
             Math.floor(
                 Date.now() / 180
             ) % 2;
 
 
-        if (walkingFrame === 0) {
+        if (frame === 0) {
 
             setPlayerSprite(
                 "walk_01"
@@ -572,31 +589,73 @@ function playerMovement() {
 
         }
 
+
+        return;
+
+    }
+
+
+    /*
+        JUMP
+    */
+
+    if (player.y > 0) {
+
+        if (
+            playerAction !== "jump_01"
+        ) {
+
+            setPlayerSprite(
+                "jump_01"
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    /*
+        IDLE
+    */
+
+    if (
+        !moving &&
+        player.y === 0
+    ) {
+
+        if (
+            playerAction !== "idle_01"
+        ) {
+
+            setPlayerSprite(
+                "idle_01"
+            );
+
+        }
+
     }
 
 
     player.x =
 
         Math.max(
-
             0,
-
             Math.min(
                 780,
                 player.x
             )
-
         );
 
 }
 
 
-// ========================================
-// PLAYER ATTACK
-// ========================================
+/* ========================= */
+/* PLAYER ATTACK */
+/* ========================= */
 
 function playerAttack(type) {
-
 
     if (
 
@@ -619,7 +678,6 @@ function playerAttack(type) {
 
 
     const distance =
-
         Math.abs(
             player.x - cpu.x
         );
@@ -629,8 +687,8 @@ function playerAttack(type) {
 
     let range;
 
+    let animation;
 
-    // PUNCH
 
     if (type === "punch") {
 
@@ -638,28 +696,24 @@ function playerAttack(type) {
 
         range = 100;
 
+        animation =
+            "punch_01";
 
-        setPlayerSprite(
-            "punch_01"
-        );
-
-    }
-
-
-    // KICK
-
-    else {
+    } else {
 
         damage = 12;
 
         range = 120;
 
-
-        setPlayerSprite(
-            "kick_01"
-        );
+        animation =
+            "kick_01";
 
     }
+
+
+    setPlayerSprite(
+        animation
+    );
 
 
     if (distance <= range) {
@@ -673,9 +727,14 @@ function playerAttack(type) {
 
         player.attacking = false;
 
-        setPlayerSprite(
-            "idle_01"
-        );
+
+        if (player.hp > 0) {
+
+            setPlayerSprite(
+                "idle_01"
+            );
+
+        }
 
     }, 300);
 
@@ -689,12 +748,11 @@ function playerAttack(type) {
 }
 
 
-// ========================================
-// CPU AI
-// ========================================
+/* ========================= */
+/* CPU AI */
+/* ========================= */
 
 function cpuAI() {
-
 
     const distance =
         player.x - cpu.x;
@@ -704,7 +762,9 @@ function cpuAI() {
         Math.abs(distance);
 
 
-    // MOVE
+    /*
+        MOVE
+    */
 
     if (absDistance > 110) {
 
@@ -723,7 +783,9 @@ function cpuAI() {
     }
 
 
-    // JUMP
+    /*
+        JUMP
+    */
 
     if (
 
@@ -742,7 +804,9 @@ function cpuAI() {
     }
 
 
-    // ATTACK
+    /*
+        ATTACK
+    */
 
     if (
 
@@ -761,7 +825,9 @@ function cpuAI() {
     }
 
 
-    // BLOCK
+    /*
+        BLOCK
+    */
 
     cpu.blocking =
 
@@ -775,22 +841,19 @@ function cpuAI() {
     cpu.x =
 
         Math.max(
-
             0,
-
             Math.min(
                 840,
                 cpu.x
             )
-
         );
 
 }
 
 
-// ========================================
-// CPU JUMP
-// ========================================
+/* ========================= */
+/* CPU JUMP */
+/* ========================= */
 
 function cpuJump() {
 
@@ -825,9 +888,9 @@ function cpuJump() {
 }
 
 
-// ========================================
-// CPU ATTACK
-// ========================================
+/* ========================= */
+/* CPU ATTACK */
+/* ========================= */
 
 function cpuAttack() {
 
@@ -837,7 +900,6 @@ function cpuAttack() {
 
 
     const distance =
-
         Math.abs(
             cpu.x - player.x
         );
@@ -857,7 +919,10 @@ function cpuAttack() {
 
     if (distance <= range) {
 
-        damagePlayer(damage);
+        damagePlayer(
+            damage,
+            kick ? "kick" : "punch"
+        );
 
     }
 
@@ -878,14 +943,22 @@ function cpuAttack() {
 }
 
 
-// ========================================
-// DAMAGE PLAYER
-// ========================================
+/* ========================= */
+/* DAMAGE PLAYER */
+/* ========================= */
 
-function damagePlayer(amount) {
+function damagePlayer(amount, type) {
+
+    if (player.hp <= 0) {
+
+        return;
+
+    }
 
 
-    // BLOCK
+    /*
+        BLOCK
+    */
 
     if (player.blocking) {
 
@@ -898,13 +971,25 @@ function damagePlayer(amount) {
     }
 
 
-    // HIT
+    /*
+        HIT
+    */
 
     else {
 
-        setPlayerSprite(
-            "hit_01"
-        );
+        if (type === "kick") {
+
+            setPlayerSprite(
+                "hit_02"
+            );
+
+        } else {
+
+            setPlayerSprite(
+                "hit_01"
+            );
+
+        }
 
     }
 
@@ -917,30 +1002,31 @@ function damagePlayer(amount) {
         );
 
 
-    setTimeout(() => {
+    if (player.hp > 0) {
 
-        if (
+        setTimeout(() => {
 
-            player.hp > 0 &&
+            if (
+                !player.blocking &&
+                player.hp > 0
+            ) {
 
-            !player.blocking
+                setPlayerSprite(
+                    "idle_01"
+                );
 
-        ) {
+            }
 
-            setPlayerSprite(
-                "idle_01"
-            );
+        }, 350);
 
-        }
-
-    }, 350);
+    }
 
 }
 
 
-// ========================================
-// DAMAGE CPU
-// ========================================
+/* ========================= */
+/* DAMAGE CPU */
+/* ========================= */
 
 function damageCPU(amount) {
 
@@ -961,9 +1047,9 @@ function damageCPU(amount) {
 }
 
 
-// ========================================
-// HEALTH
-// ========================================
+/* ========================= */
+/* HEALTH */
+/* ========================= */
 
 function updateHealth() {
 
@@ -977,12 +1063,11 @@ function updateHealth() {
 }
 
 
-// ========================================
-// WINNER
-// ========================================
+/* ========================= */
+/* WINNER */
+/* ========================= */
 
 function checkWinner() {
-
 
     if (player.hp <= 0) {
 
@@ -1007,31 +1092,24 @@ function checkWinner() {
 }
 
 
-// ========================================
-// ROUND FINISH
-// ========================================
+/* ========================= */
+/* ROUND FINISH */
+/* ========================= */
 
 function finishRound(winner) {
-
 
     gameRunning = false;
 
     roundIntro = true;
 
 
-    // PLAYER LOST ROUND
-
     if (winner === "CPU") {
 
-        setPlayerSprite(
-            "ko"
-        );
+        setPlayerSprite("ko");
 
 
         cpuRounds++;
 
-
-        // CPU WINS MATCH
 
         if (cpuRounds >= 2) {
 
@@ -1051,19 +1129,10 @@ function finishRound(winner) {
     }
 
 
-    // PLAYER WON ROUND
-
     else {
 
         playerRounds++;
 
-
-        // CPU KO
-
-        // CPU remains placeholder
-
-
-        // PLAYER WINS MATCH
 
         if (playerRounds >= 2) {
 
@@ -1080,8 +1149,6 @@ function finishRound(winner) {
 
     }
 
-
-    // NEXT ROUND
 
     resultText.innerHTML =
 
@@ -1121,9 +1188,9 @@ function finishRound(winner) {
 }
 
 
-// ========================================
-// FINAL GAME END
-// ========================================
+/* ========================= */
+/* FINAL GAME END */
+/* ========================= */
 
 function endGame(text) {
 
@@ -1154,21 +1221,18 @@ function endGame(text) {
 }
 
 
-// ========================================
-// DRAW
-// ========================================
+/* ========================= */
+/* DRAW */
+/* ========================= */
 
 function draw() {
-
 
     playerEl.style.left =
         player.x + "px";
 
 
     playerEl.style.bottom =
-
-        (45 + player.y) +
-        "px";
+        (8 + player.y) + "px";
 
 
     cpuEl.style.left =
@@ -1176,28 +1240,22 @@ function draw() {
 
 
     cpuEl.style.bottom =
-
-        (45 + cpu.y) +
-        "px";
+        (8 + cpu.y) + "px";
 
 
     playerEl.classList.toggle(
-
         "blocking",
-
         player.blocking
-
     );
 
 }
 
 
-// ========================================
-// GAME LOOP
-// ========================================
+/* ========================= */
+/* GAME LOOP */
+/* ========================= */
 
 function gameLoop() {
-
 
     if (!gameRunning) {
 
@@ -1236,9 +1294,9 @@ function gameLoop() {
 }
 
 
-// ========================================
-// END BUTTONS
-// ========================================
+/* ========================= */
+/* END BUTTONS */
+/* ========================= */
 
 restartButton.addEventListener(
     "click",
